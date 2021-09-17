@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use App\Models\Configuration\RolePermission\Role;
 use App\Models\Configuration\RolePermission\UserRole;
+use App\Models\UserFaculty;
+use App\Models\UserStudent;
 use Carbon\Carbon;
 use Auth;
 
@@ -76,20 +79,32 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+			'user_id' => ['required'],
 			'role' => ['required'],
-			'username' => ['required', 'string', 'max:255', 'unique:users,name'],
+			'username' => ['required', 'string', 'max:255', 'unique:users,username'],
 			'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
 			'password' => ['required', 'string', 'min:6', 'confirmed'],
-		]);
+        ]);
+        
 		$user = User::create([
-			// 'role_id' => $request->get('role'),
-			'employee_id' => $request->get('employee'),
-			'name' => $request->get('username'),
+			'username' => $request->get('username'),
 			'email' => $request->get('email'),
 			'password' => Hash::make($request->get('password')),
-		]);
-		$user->assignRole($request->role);
-		// return redirect()->route('users.index')->with('alert-success', 'Successfully Registered');
+        ]);
+        
+        $user->assignRole($request->role);
+        
+        if($request->get('type') == 'student') {
+            UserStudent::create([
+                'user_id' => $user->id,
+                'student_id' => $request->get('user_id')
+            ]);
+        }else{
+            UserFaculty::create([
+                'user_id' => $user->id,
+                'faculty_id' => $request->get('user_id')
+            ]);
+        }
 		return back()->with('alert-success', 'Saved');
     }
 

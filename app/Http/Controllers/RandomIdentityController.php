@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Student;
+use App\Models\Section;
+use App\Models\StudentSection;
 use App\Models\Faculty;
 use Carbon\Carbon;
 
@@ -24,7 +26,7 @@ class RandomIdentityController extends Controller
 			$middle_name = $this->lname();
 			list($brgy, $city, $province) = $this->address();
 			list($sex, $fname) = $this->fname();
-			Student::create([
+			$student = Student::create([
 				'student_id' => $this->student_id(),
 				'first_name' => $fname,
 				'middle_name' => $middle_name,
@@ -33,6 +35,13 @@ class RandomIdentityController extends Controller
 				'contact_number' => $this->phone(),
 				'address' => $brgy . ', ' . $city . ', ' . $province
 			]);
+			
+			$section = Section::inRandomOrder()->first();
+			StudentSection::create([
+				'student_id' => $student->id,
+				'section_id' => $section->id
+			]);
+
 
 		}
 
@@ -55,25 +64,13 @@ class RandomIdentityController extends Controller
 
 			$lname = $this->lname();
 			$mname = $this->lname();
-			$civil_status = $this->civil_status();
-			if($civil_status == "Married"){
-				if($sex == 'Male'){
-				   $spouse_name = $this->female_name().' '.$lname;
-				}else{
-				   $spouse_name = $this->male_name().' '.$lname;
-				}
-				$spouse_contact = $this->phone();
-			}else{
-				$spouse_name = null;
-				$spouse_contact = null;
-			}
 
 			$bdate = $this->bdate();
 			Faculty::create([
 				'faculty_id' => $this->student_id(),
 				'first_name' => $fname,
-				'middle_name' => $middle_name,
-				'last_name' => $last_name,
+				'middle_name' => $mname,
+				'last_name' => $lname,
 				'gender' => $sex,
 				'contact_number' => $this->phone(),
 				'address' => $brgy . ', ' . $city . ', ' . $province

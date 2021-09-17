@@ -11,7 +11,7 @@ class StudentSection extends Model
 	use SoftDeletes;
 	use Userstamps;
     
-    protected $table = 'user_students';
+    protected $table = 'student_sections';
 
     protected $fillable = [
         'section_id',

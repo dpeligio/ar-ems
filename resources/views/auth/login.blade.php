@@ -96,5 +96,17 @@
         <script src="{{ asset('AdminLTE-3.1.0/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
         <!-- AdminLTE App -->
         <script src="{{ asset('AdminLTE-3.1.0/dist/js/adminlte.min.js') }}"></script>
+        <script type="application/javascript">
+            $(function() {
+                /*$(document).on('click', '.btn-submit-out', function() {
+                    $(this).prop('disabled', true).append(' <i class="fa fa-spinner fa-pulse"></i>');
+                    $($(this).data('submit')).submit();
+                });*/
+        
+                $(document).on('submit', 'form', function(){
+                    $(this).find('button[type=submit]').prop('disabled', true).append(' <i class="fa fa-spinner fa-spin fa-pulse"></i>')
+                })
+            });
+        </script>
     </body>
 </html>

@@ -14,7 +14,14 @@
                 <img src="{{ asset('AdminLTE-3.1.0/dist/img/user2-160x160.jpg') }}" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
-                <a href="#" class="d-block">{{ Auth::user()->first_name }} ({{ Auth::user()->username }})</a>
+                <a href="#" class="d-block">
+                    @if (Auth::user()->student)
+                        {{ Auth::user()->student->student->first_name }}
+                    @elseif (Auth::user()->faculty)
+                        {{ Auth::user()->faculty->faculty->first_name }}
+                    @endif
+                    ({{ Auth::user()->username }})
+                </a>
             </div>
         </div>
         @endauth
@@ -60,7 +67,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('home') }}" class="nav-link">
+                        <a href="{{ route('login') }}" class="nav-link">
                             <i class="nav-icon fas fa-poll"></i>
                             <p>
                                 Vote
@@ -85,14 +92,27 @@
                             </p>
                         </a>
                     </li>
+                    @can('elections.index')
                     <li class="nav-item">
                         <a href="{{ route('elections.index') }}" class="nav-link">
-                            <i class="nav-icon fas fa-vote-yea"></i>
+                            <i class="nav-icon fas fa-poll-people"></i>
                             <p>
                                 Elections
                             </p>
                         </a>
                     </li>
+                    @endcan
+                    @can('votes.index')
+                    <li class="nav-item">
+                        <a href="{{ route('votes.index') }}" class="nav-link">
+                            <i class="nav-icon fas fa-box-ballot"></i>
+                            <p>
+                                Votes
+                            </p>
+                        </a>
+                    </li>
+                    @endcan
+                    @can('results.index')
                     <li class="nav-item">
                         <a href="{{ route('results.index') }}" class="nav-link">
                             <i class="nav-icon fas fa-poll"></i>
@@ -101,6 +121,8 @@
                             </p>
                         </a>
                     </li>
+                    @endcan
+                    @can('tasks.index')
                     <li class="nav-item">
                         <a href="{{ route('tasks.index') }}" class="nav-link">
                             <i class="nav-icon fas fa-list"></i>
@@ -109,14 +131,37 @@
                             </p>
                         </a>
                     </li>
+                    @endcan
+                    @can('students.index')
+                    <li class="nav-item">
+                        <a href="{{ route('students.index') }}" class="nav-link">
+                            <i class="nav-icon fas fa-users-class"></i>
+                            <p>
+                                Students
+                            </p>
+                        </a>
+                    </li>
+                    @endcan
+                    @can('faculties.index')
+                    <li class="nav-item">
+                        <a href="{{ route('faculties.index') }}" class="nav-link">
+                            <i class="nav-icon fas fa-chalkboard-teacher"></i>
+                            <p>
+                                Faculties
+                            </p>
+                        </a>
+                    </li>
+                    @endcan
+                    @can('users.index')
                     <li class="nav-item">
                         <a href="{{ route('users.index') }}" class="nav-link">
-                            <i class="nav-icon fas fa-users"></i>
+                            <i class="nav-icon fas fa-user-lock"></i>
                             <p>
                                 Users
                             </p>
                         </a>
                     </li>
+                    @endcan
                     <li class="nav-item">
                         <a href="#" class="nav-link">
                             <i class="nav-icon fas fa-cogs"></i>

@@ -20,7 +20,7 @@ class CreateFacultiesTable extends Migration
             $table->string('middle_name');
             $table->string('last_name');
             $table->string('gender');
-            $table->integer('contact_number')->unique();
+            $table->string('contact_number')->unique();
             $table->text('address')->nullable();
             $table->unsignedBigInteger('created_by')->nullable();
 			$table->unsignedBigInteger('updated_by')->nullable();

@@ -53,11 +53,11 @@ Route::group(array('middleware'=>['auth']), function() {
 	/**
 	 * Student
 	 */
-	Route::resource('students', 'Configuration\StudentController');
+	Route::resource('students', 'StudentController');
 	// restore
 	Route::post('students_restore/{position}', [
 		'as' => 'students.restore',
-		'uses' => 'Configuration\StudentController@restore'
+		'uses' => 'StudentController@restore'
 	]);
 
 	/**
@@ -66,11 +66,11 @@ Route::group(array('middleware'=>['auth']), function() {
 	/* Route::resource('faculties', 'Configuration\FacultyController')->parameters([
 		'faculties' => 'faculty'
 	]); */
-	Route::resource('faculties', 'Configuration\FacultyController');
+	Route::resource('faculties', 'FacultyController');
 	// restore
 	Route::post('faculties_restore/{position}', [
 		'as' => 'faculties.restore',
-		'uses' => 'Configuration\FacultyController@restore'
+		'uses' => 'FacultyController@restore'
 	]);
 
 	/**
@@ -134,4 +134,5 @@ Route::group(array('middleware'=>['auth']), function() {
 /**	
  * Dev
  */
-Route::get('insert_students', ['as' => 'random_identity.insert_students', 'uses' => 'RandomIdentityController@insertStudent']);
+Route::post('insert_student', ['as' => 'dummy_identity.insert_student', 'uses' => 'RandomIdentityController@insert_student']);
+Route::post('insert_faculty', ['as' => 'dummy_identity.insert_faculty', 'uses' => 'RandomIdentityController@insert_faculty']);

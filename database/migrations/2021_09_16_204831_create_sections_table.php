@@ -15,7 +15,7 @@ class CreateSectionsTable extends Migration
     {
         Schema::create('sections', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('year_lever');
+            $table->integer('year_level');
             $table->string('name')->unique();
             $table->unsignedBigInteger('created_by')->nullable();
 			$table->unsignedBigInteger('updated_by')->nullable();

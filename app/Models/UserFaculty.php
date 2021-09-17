@@ -17,4 +17,12 @@ class UserFaculty extends Model
         'user_id',
         'faculty_id'
     ];
+
+    public function user(){
+        return $this->belongsTo('App\Models\User', 'user_id');
+    }
+
+    public function faculty(){
+        return $this->belongsTo('App\Models\Faculty', 'faculty_id');
+    }
 }
