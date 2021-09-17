@@ -110,6 +110,14 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a href="{{ route('users.index') }}" class="nav-link">
+                            <i class="nav-icon fas fa-users"></i>
+                            <p>
+                                Users
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a href="#" class="nav-link">
                             <i class="nav-icon fas fa-cogs"></i>
                             <p>
@@ -131,6 +139,7 @@
                                     <p>Roles/Permissions</p>
                                 </a>
                             </li>
+                            
                         </ul>
                     </li>
                     <li class="nav-item">

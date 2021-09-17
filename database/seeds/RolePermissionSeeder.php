@@ -76,10 +76,34 @@ class RolePermissionSeeder extends Seeder
         }
 
         $master_admin = Role::create(['name' => 'System Administrator']);
-        // $master_admin = Role::find(1);
-        // $admin = Role::find(2);
-        // $doctor = Role::find(3);
+        $admin = Role::create(['name' => 'Administrator']);
         $master_admin->givePermissionTo(Permission::all());
+        $faculty = Role::create(['name' => 'Faculty']);
+        $student = Role::create(['name' => 'Student']);
+
+        $admin->givePermissionTo(
+            Permission::where([
+                ['group', '!=', 'roles'],
+                ['group', '!=', 'permissions'],
+            ])->get()
+        );
+
+        $faculty->givePermissionTo(
+            Permission::where([
+                ['group', '==', 'students'],
+                ['group', '==', 'results'],
+                ['name', 'NOT LIKE', '%destroy%'],
+            ])->get()
+        );
+
+        $student->givePermissionTo(
+            Permission::where([
+                ['name', '==', 'results.index'],
+                ['name', '==', 'results.view'],
+                ['name', '==', 'votes.create'],
+                ['name', 'NOT LIKE', '%destroy%'],
+            ])->get()
+        );
         
     }
 }

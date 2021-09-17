@@ -19,25 +19,25 @@
     </table>
 @endsection
 @section('tab_content_script')
-        <script type="text/javascript">
-            $(function() {
-                $('#permissionsTable').DataTable({
-                    /*scrollY           : "100vh",
-                    scrollCollapse    : true,
-                    paging            : false,*/
-                    // processing: true,
-                    serverSide: true,
-                    ajax: {
-                        url: '{{ route('permissions.index') }}',
-                        type: 'GET'
-                    },
-                    columns: [
-                        {data: 'name', name: 'name' },
-                        {data: 'group', name: 'group' },
-                        {data: 'action', name: 'action', orderable: false, className: "text-center"},
-                        ],
-                    order: [[0, 'desc']]
-                });
-            })
-        </script>
-    @endsection
+    <script type="text/javascript">
+        $(function() {
+            $('#permissionsTable').DataTable({
+                /*scrollY           : "100vh",
+                scrollCollapse    : true,
+                paging            : false,*/
+                // processing: true,
+                serverSide: true,
+                ajax: {
+                    url: '{{ route('permissions.index') }}',
+                    type: 'GET'
+                },
+                columns: [
+                    {data: 'name', name: 'name' },
+                    {data: 'group', name: 'group' },
+                    {data: 'action', name: 'action', orderable: false, className: "text-center"},
+                    ],
+                order: [[0, 'desc']]
+            });
+        })
+    </script>
+@endsection

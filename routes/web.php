@@ -51,13 +51,46 @@ Route::group(array('middleware'=>['auth']), function() {
 	]);
 
 	/**
+	 * Student
+	 */
+	Route::resource('students', 'Configuration\StudentController');
+	// restore
+	Route::post('students_restore/{position}', [
+		'as' => 'students.restore',
+		'uses' => 'Configuration\StudentController@restore'
+	]);
+
+	/**
+	 * Faculty
+	 */
+	/* Route::resource('faculties', 'Configuration\FacultyController')->parameters([
+		'faculties' => 'faculty'
+	]); */
+	Route::resource('faculties', 'Configuration\FacultyController');
+	// restore
+	Route::post('faculties_restore/{position}', [
+		'as' => 'faculties.restore',
+		'uses' => 'Configuration\FacultyController@restore'
+	]);
+
+	/**
 	 * Elections
 	 */
 	Route::resource('elections', 'ElectionController');
 	// restore
-	Route::post('elections_restore/{position}', [
+	Route::post('elections_restore/{election}', [
 		'as' => 'elections.restore',
 		'uses' => 'ElectionController@restore'
+	]);
+
+	/**
+	 * Votes
+	 */
+	Route::resource('votes', 'VoteController');
+	// restore
+	Route::post('votes_restore/{vote}', [
+		'as' => 'votes.restore',
+		'uses' => 'VoteController@restore'
 	]);
 
 	/**
@@ -96,4 +129,9 @@ Route::group(array('middleware'=>['auth']), function() {
 		'uses' => 'UserController@restore'
 	]);
 
+	
 });
+/**	
+ * Dev
+ */
+Route::get('insert_students', ['as' => 'random_identity.insert_students', 'uses' => 'RandomIdentityController@insertStudent']);

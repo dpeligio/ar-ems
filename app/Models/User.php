@@ -5,15 +5,15 @@ namespace App\Models;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Wildside\Userstamps\Userstamps;
 
 class User extends Authenticatable
 {
-    use Notifiable;
-	use SoftDeletes;
+    use SoftDeletes;
 	use Userstamps;
+    use Notifiable;
 	use HasRoles;
 
     /**
@@ -48,4 +48,18 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function role()
+	{
+		return $this->belongsTo('App\Models\Configuration\RolePermission\UserRole', 'id', 'model_id');
+    }
+    
+    public function student(){
+        return $this->belongsTo('App\Models\UserStudent', 'user_id');
+    }
+
+    public function faculty(){
+        return $this->belongsTo('App\Models\FacultyStudent', 'user_id');
+    }
+
 }
