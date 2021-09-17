@@ -15,10 +15,10 @@ class CreateElectionsTable extends Migration
     {
         Schema::create('elections', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('status');
             $table->string('title');
             $table->text('description');
-            $table->string('status');
-            $table->timestamp('appointment_date')->nullable();
+            $table->timestamp('election_date')->nullable();
             $table->unsignedBigInteger('created_by')->nullable();
 			$table->unsignedBigInteger('updated_by')->nullable();
 			$table->unsignedBigInteger('deleted_by')->nullable();

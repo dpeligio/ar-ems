@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Election;
 use Illuminate\Http\Request;
+use App\Models\Configuration\Position;
+use App\Models\Student;
+use App\Models\Candidate;
 
 class ElectionController extends Controller
 {
@@ -14,7 +17,11 @@ class ElectionController extends Controller
      */
     public function index()
     {
-        //
+        $data = [
+            'elections' => Election::get()
+        ];
+
+        return view('elections.index', $data);
     }
 
     /**
@@ -24,7 +31,19 @@ class ElectionController extends Controller
      */
     public function create()
     {
-        //
+        $data = ([
+			'positions' => Position::get(),
+			'students' => Student::get()
+		]);
+		/* if(!Auth::user()->hasrole('System Administrator')){
+			$data = ([
+				'faculty' => $faculty,
+			]);
+		} */
+
+		return response()->json([
+			'modal_content' => view('elections.create', $data)->render()
+		]);
     }
 
     /**
@@ -35,7 +54,10 @@ class ElectionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+			'title' => ['required', 'unique:elections,title'],
+			'election_date' => 'required'
+        ]);
     }
 
     /**

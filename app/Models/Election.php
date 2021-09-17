@@ -14,10 +14,10 @@ class Election extends Model
     protected $table = 'elections';
 
     protected $fillable = [
+        'status',
         'title',
         'description',
-        'status',
-        'appointment_date'
+        'election_date'
     ];
 
     public function candidates() {
