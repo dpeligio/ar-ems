@@ -41,8 +41,14 @@
                                 @role('System Administrator')
                                 <td>{{ $vote->id }}</td>
                                 @endrole
-                                <td>{{ $vote->student->student_id }}</td>
-                                <td>{{ $vote->student->getStudentName($vote->student_id) }}</td>
+                                <td>{{ $vote->vote_number }}</td>
+                                <td>
+                                    @if($vote->student)
+                                    {{ $vote->student->getStudentName($vote->voter_id) }}
+                                    @elseif($vote->faculty)
+                                    {{ $vote->faculty->getFacultyName($vote->voter_id) }}
+                                    @endif
+                                </td>
                                 @role('System Administrator')
                                     <td class="text-center">
                                         <a href="javascript:void(0)" data-toggle="modal-ajax" data-target="#showVote" data-href="{{ route('votes.show',$vote->id) }}"><i class="fad fa-file fa-lg"></i></a>
