@@ -23,7 +23,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col">
-                    <table id="datatable" class="table table-sm table-bordered table-striped">
+                    <table id="datatable" class="table table-sm table-bordered table-hover">
                         <thead>
                             <tr>
                                 @role('System Administrator')

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateVotesTable extends Migration
+class CreateVoteDataTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,21 @@ class CreateVotesTable extends Migration
      */
     public function up()
     {
-        Schema::create('votes', function (Blueprint $table) {
+        Schema::create('vote_data', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('vote_number')->unique();
-            $table->unsignedBigInteger('election_id');
-            $table->foreign('election_id')->references('id')
-                ->on('elections')
+            $table->unsignedBigInteger('vote_id');
+            $table->foreign('vote_id')->references('id')
+                ->on('votes')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
-            $table->unsignedBigInteger('voter_id');
-            $table->foreign('voter_id')->references('id')
-                ->on('users')
+            $table->unsignedBigInteger('position_id');
+            $table->foreign('position_id')->references('id')
+                ->on('positions')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+            $table->unsignedBigInteger('candidate_id');
+            $table->foreign('candidate_id')->references('id')
+                ->on('candidates')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
             $table->unsignedBigInteger('created_by')->nullable();
@@ -41,6 +45,6 @@ class CreateVotesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('votes');
+        Schema::dropIfExists('vote_data');
     }
 }

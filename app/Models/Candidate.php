@@ -30,5 +30,10 @@ class Candidate extends Model
     public function position(){
         return $this->belongsTo('App\Models\Configuration\Position', 'position_id');
     }
+
+    public function votes()
+    {
+        return $this->hasMany('App\Models\VoteData', 'candidate_id');
+    }
     
 }

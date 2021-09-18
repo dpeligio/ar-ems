@@ -22,7 +22,7 @@
                         <div class="form-group col-md-12">
                             <label>Date of Election:</label>
                             <div class="input-group datetimepicker" id="electionDate" data-target-input="nearest">
-                                <input type="text" name="election_date" class="form-control datetimepicker-input" data-target="#electionDate" data-toggle="datetimepicker" required/>
+                                <input type="text" name="election_date" class="form-control datetimepicker-input" data-target="#electionDate" data-toggle="datetimepicker"/>
                                 <div class="input-group-append" data-target="#electionDate" data-toggle="datetimepicker">
                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                 </div>
@@ -33,7 +33,7 @@
                         @foreach ($positions as $position)
                         <div class="form-group col-md-12">
 							<label>{{ $position->name }}:</label>
-							<select class="form-control select2" multiple  name="cadidates[{{ $position->id }}]" style="width: 100%">
+							<select class="form-control select2" multiple  name="candidates[{{ $position->id}}][]" style="width: 100%">
 								@foreach ($students as $student)
 									<option value="{{ $student->id }}">{{ $student->getStudentName($student->id) }}</option>
 								@endforeach

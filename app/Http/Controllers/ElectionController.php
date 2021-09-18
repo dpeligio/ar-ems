@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Configuration\Position;
 use App\Models\Student;
 use App\Models\Candidate;
+use Carbon\Carbon;
 
 class ElectionController extends Controller
 {
@@ -56,8 +57,27 @@ class ElectionController extends Controller
     {
         $request->validate([
 			'title' => ['required', 'unique:elections,title'],
-			'election_date' => 'required'
+            'election_date' => 'required',
         ]);
+
+        $election = Election::create([
+            'title' => $request->get('title'),
+            'description' => $request->get('description'),
+            'election_date' => Carbon::parse($request->get('election_date')),
+            'status' => "1"
+        ]);
+
+        foreach($request->get('candidates') as $position => $candidates){
+            foreach($candidates as $candidate){
+                Candidate::create([
+                    'student_id' => $candidate,
+                    'election_id' => $election->id,
+                    'position_id' => $position
+                ]);
+            }
+        }
+
+        return back()->with('alert-success', 'Saved');
     }
 
     /**
@@ -68,7 +88,12 @@ class ElectionController extends Controller
      */
     public function show(Election $election)
     {
-        //
+        $data = [
+            'election_show' => $election
+        ];
+        return response()->json([
+			'modal_content' => view('elections.show', $data)->render()
+		]);
     }
 
     /**
@@ -103,5 +128,15 @@ class ElectionController extends Controller
     public function destroy(Election $election)
     {
         //
+    }
+
+    public function getElectionData(Request $request, Election $election)
+    {
+        $data = [
+            'election' => $election
+        ];
+        return response()->json([
+			'election_data' => view('votes.vote', $data)->render()
+		]);
     }
 }

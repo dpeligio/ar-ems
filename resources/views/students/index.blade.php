@@ -23,7 +23,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col">
-                    <table id="datatable" class="table table-sm table-bordered table-striped">
+                    <table id="datatable" class="table table-sm table-bordered table-hover">
                         <thead>
                             <tr>
                                 @role('System Administrator')
@@ -77,8 +77,8 @@
                         </tbody>
                     </table>
                 </div>
-                @if(config('app.env') == 'local')
-                    @role('System Administrator')
+                @role('System Administrator')
+                    @if(config('app.env') == 'local')
                     <div class="col-md-3">
                         <div class="card">
                             <div class="card-header">
@@ -98,8 +98,8 @@
                             </div>
                         </div>
                     </div>	
-                    @endrole
-                @endif
+                    @endif
+                @endrole
             </div>
         </div>
     </section>

@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Vote;
 use Illuminate\Http\Request;
+use App\Models\Election;
+use App\Models\Candidate;
+use App\Models\VoteData;
+use Auth;
 
 class VoteController extends Controller
 {
@@ -14,7 +18,11 @@ class VoteController extends Controller
      */
     public function index()
     {
-        //
+        $data = [
+            'votes' => Vote::get()
+        ];
+
+        return view('votes.index', $data);
     }
 
     /**
@@ -24,7 +32,17 @@ class VoteController extends Controller
      */
     public function create()
     {
-        //
+        $studentVotes = Vote::where([
+            'id' => Auth::user()->id
+        ])->select('election_id');
+
+        $data = ([
+			'elections' => Election::whereIn('id', $studentVotes)->get()
+		]);
+
+		return response()->json([
+			'modal_content' => view('votes.create', $data)->render()
+		]);
     }
 
     /**
@@ -35,7 +53,25 @@ class VoteController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'election_id' => 'required'
+        ]);
+
+        $vote = Vote::create([
+            'vote_number' => time(),
+            'election_id' => $request->get('election_id'),
+            'voter_id' => Auth::user()->id,
+        ]);
+
+        foreach ($request->get('position') as $position => $candidate) {
+            VoteData::create([
+                'vote_id' => $vote->id,
+                'position_id' => $position,
+                'candidate_id' => $candidate,
+            ]);
+        }
+        
+        return back()->with('alert-success', 'Saved');
     }
 
     /**
@@ -82,4 +118,5 @@ class VoteController extends Controller
     {
         //
     }
+    
 }

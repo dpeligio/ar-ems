@@ -78,6 +78,7 @@ Route::group(array('middleware'=>['auth']), function() {
 	 */
 	Route::resource('elections', 'ElectionController');
 	// restore
+	Route::get('elections/get_election_data/{election}', 'ElectionController@getElectionData')->name('votes.get_election_data');
 	Route::post('elections_restore/{election}', [
 		'as' => 'elections.restore',
 		'uses' => 'ElectionController@restore'
@@ -87,6 +88,10 @@ Route::group(array('middleware'=>['auth']), function() {
 	 * Votes
 	 */
 	Route::resource('votes', 'VoteController');
+	Route::post('get_election_data/{election}', [
+		'as' => 'votes.get_election_data',
+		'uses' => 'VoteController@getElectionData'
+	]);
 	// restore
 	Route::post('votes_restore/{vote}', [
 		'as' => 'votes.restore',

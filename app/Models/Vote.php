@@ -14,20 +14,21 @@ class Vote extends Model
     protected $table = 'votes';
 
     protected $fillable = [
+        'vote_number',
         'election_id',
-        'candidate_id',
-        'student_id',
+        'voter_id',
     ];
 
-    public function student(){
-        return $this->belongsTo('App\Models\Student', 'student_id');
-    }
-
-    public function candidate(){
-        return $this->belongsTo('App\Models\Candidate', 'cadidate_id');
+    public function user(){
+        return $this->belongsTo('App\Models\User', 'voter_id');
     }
 
     public function election(){
         return $this->belongsTo('App\Models\Election', 'election_id');
+    }
+
+    public function vote_data()
+    {
+        return $this->hasMany('App\Models\VoteData', 'vote_id');
     }
 }
