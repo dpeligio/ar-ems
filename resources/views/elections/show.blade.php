@@ -37,7 +37,7 @@
                                         {{ $candidate->student->getStudentName($candidate->student_id) }}
                                     </td>
                                     <td>
-                                        {{ $candidate->votes->count() }}
+                                        {{ $candidate->votes->count() ?? "N/A" }}
                                     </td>
                                 </tr>
                                 @endforeach
