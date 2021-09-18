@@ -33,7 +33,7 @@ class VoteController extends Controller
     public function create()
     {
         $studentVotes = Vote::where([
-            'id' => Auth::user()->id
+            'voter_id' => Auth::user()->id
         ])->select('election_id');
 
         $data = ([
