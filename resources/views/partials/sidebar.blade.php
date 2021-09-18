@@ -162,6 +162,10 @@
                         </a>
                     </li>
                     @endcan
+                    @canany([
+                        'positions.index',
+                        'roles.index'
+                    ])
                     <li class="nav-item">
                         <a href="#" class="nav-link">
                             <i class="nav-icon fas fa-cogs"></i>
@@ -187,6 +191,7 @@
                             
                         </ul>
                     </li>
+                    @endcanany
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">
                             <i class="nav-icon fas fa-sign-out"></i>

@@ -43,10 +43,10 @@
                                 @endrole
                                 <td>{{ $vote->vote_number }}</td>
                                 <td>
-                                    @if($vote->student)
-                                    {{ $vote->student->getStudentName($vote->voter_id) }}
-                                    @elseif($vote->faculty)
-                                    {{ $vote->faculty->getFacultyName($vote->voter_id) }}
+                                    @if($vote->user->student)
+                                    {{ $vote->user->student->student->getStudentName($vote->user->student->student_id) }}
+                                    @elseif($vote->user->faculty)
+                                    {{ $vote->user->faculty->student->getFacultyName($vote->user->faculty->faculty_id) }}
                                     @endif
                                 </td>
                                 @role('System Administrator')
