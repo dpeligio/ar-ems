@@ -37,7 +37,7 @@ class VoteController extends Controller
         ])->select('election_id');
 
         $data = ([
-			'elections' => Election::whereIn('id', $studentVotes)->get()
+			'elections' => Election::whereNotIn('id', $studentVotes)->get()
 		]);
 
 		return response()->json([
