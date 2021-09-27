@@ -16,20 +16,20 @@ class CreateVoteDataTable extends Migration
         Schema::create('vote_data', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('vote_id');
-            $table->foreign('vote_id')->references('id')
+            /* $table->foreign('vote_id')->references('id')
                 ->on('votes')
                 ->onDelete('cascade')
-                ->onUpdate('cascade');
+                ->onUpdate('cascade'); */
             $table->unsignedBigInteger('position_id');
-            $table->foreign('position_id')->references('id')
+            /* $table->foreign('position_id')->references('id')
                 ->on('positions')
                 ->onDelete('cascade')
-                ->onUpdate('cascade');
+                ->onUpdate('cascade'); */
             $table->unsignedBigInteger('candidate_id');
-            $table->foreign('candidate_id')->references('id')
+            /* $table->foreign('candidate_id')->references('id')
                 ->on('candidates')
                 ->onDelete('cascade')
-                ->onUpdate('cascade');
+                ->onUpdate('cascade'); */
             $table->unsignedBigInteger('created_by')->nullable();
 			$table->unsignedBigInteger('updated_by')->nullable();
 			$table->unsignedBigInteger('deleted_by')->nullable();
