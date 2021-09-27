@@ -57,7 +57,7 @@ class ElectionController extends Controller
     {
         $request->validate([
 			'title' => ['required', 'unique:elections,title'],
-            'election_date' => 'required',
+            'start_date' => 'required',
             'description' => 'required',
         ]);
 

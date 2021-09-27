@@ -90,15 +90,14 @@ class RolePermissionSeeder extends Seeder
 
         $faculty->givePermissionTo(
             Permission::where([
-                ['group', '==', 'students'],
-                ['group', '==', 'results'],
+                ['group', '=', 'students'],
                 ['name', 'NOT LIKE', '%destroy%'],
             ])->get()
         );
 
         $student->givePermissionTo(
             Permission::where([
-                ['group', '==', 'votes'],
+                ['group', '=', 'votes'],
                 ['name', 'NOT LIKE', '%edit%'],
                 ['name', 'NOT LIKE', '%destroy%'],
             ])->get()
