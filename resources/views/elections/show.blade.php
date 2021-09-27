@@ -34,7 +34,7 @@
                                 @foreach ($candidates as $candidate)
                                 <tr>
                                     <td>
-                                        {{ $candidate->student->getStudentName($candidate->student_id) }}
+                                        {{ $candidate->student->id}} - {{ $candidate->student->getStudentName($candidate->student_id) }}
                                     </td>
                                     <td>
                                         {{ $candidate->votes->count() ?? "N/A" }}

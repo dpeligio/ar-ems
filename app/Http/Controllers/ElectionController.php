@@ -58,12 +58,13 @@ class ElectionController extends Controller
         $request->validate([
 			'title' => ['required', 'unique:elections,title'],
             'election_date' => 'required',
+            'description' => 'required',
         ]);
 
         $election = Election::create([
             'title' => $request->get('title'),
             'description' => $request->get('description'),
-            'election_date' => Carbon::parse($request->get('election_date')),
+            'start_date' => Carbon::parse($request->get('start_date')),
             'status' => "1"
         ]);
 

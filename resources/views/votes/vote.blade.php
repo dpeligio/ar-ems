@@ -29,8 +29,8 @@
                     <td class="text-center">
                         <div class="radio">
                             <div class="custom-control custom-radio">
-                                <input required type="radio" class="custom-control-input" name="position[{{ $position }}]" value="{{ $candidate->student_id }}" id="candidate_{{ $candidate->student_id }}">
-                                <label class="custom-control-label" for="candidate_{{ $candidate->student_id }}"></label>
+                                <input required type="radio" class="custom-control-input" name="position[{{ $position }}]" value="{{ $candidate->id }}" id="candidate_{{ $candidate->id }}">
+                                <label class="custom-control-label" for="candidate_{{ $candidate->id }}"></label>
                             </div>
                         </div>
                     </td>

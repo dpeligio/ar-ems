@@ -22,7 +22,7 @@
                         <div class="form-group col-md-12">
                             <label>Date of Election:</label>
                             <div class="input-group datetimepicker" id="electionDate" data-target-input="nearest">
-                                <input type="text" name="election_date" class="form-control datetimepicker-input" data-target="#electionDate" data-toggle="datetimepicker"/>
+                                <input type="text" name="start_date" class="form-control datetimepicker-input" data-target="#electionDate" data-toggle="datetimepicker"/>
                                 <div class="input-group-append" data-target="#electionDate" data-toggle="datetimepicker">
                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                 </div>
