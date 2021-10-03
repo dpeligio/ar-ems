@@ -90,23 +90,25 @@
                     <div class="card-body">
                         <div class="position-relative mb-4">
                             <div class="row">
-                            @foreach ($recentElection->candidates->groupBy('position_id') as $position => $candidates)
-                                <div class="col-md-3">
-                                    <div class="card">
-                                        <div class="card-header border-0">
-                                            <div class="d-flex justify-content-between">
-                                                <h3 class="card-title">{{ App\Models\Configuration\Position::find($position)->name }}</h3>
-                                                {{-- <a href="javascript:void(0);">View Report</a> --}}
+                            @isset($recentElection->id)
+                                @foreach ($recentElection->candidates->groupBy('position_id') as $position => $candidates)
+                                    <div class="col-md-3">
+                                        <div class="card">
+                                            <div class="card-header border-0">
+                                                <div class="d-flex justify-content-between">
+                                                    <h3 class="card-title">{{ App\Models\Configuration\Position::find($position)->name }}</h3>
+                                                    {{-- <a href="javascript:void(0);">View Report</a> --}}
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="position-relative mb-4">
-                                                {!! $recentElectionChart[$position]->container() !!}
+                                            <div class="card-body">
+                                                <div class="position-relative mb-4">
+                                                    {!! $recentElectionChart[$position]->container() !!}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            @endforeach
+                                @endforeach
+                            @endisset
                             </div>
                             {{-- {!! $recentElectionChart->container() !!} --}}
                         </div>
@@ -140,7 +142,9 @@
 
 @section('script')
 <script src="{{ asset('AdminLTE-3.1.0/plugins/chart.js/Chart.min.js') }}"></script>
-@foreach ($recentElection->candidates->groupBy('position_id') as $position => $candidates)
-{!! $recentElectionChart[$position]->script() !!}
-@endforeach
+@isset($recentElection->id)
+    @foreach ($recentElection->candidates->groupBy('position_id') as $position => $candidates)
+    {!! $recentElectionChart[$position]->script() !!}
+    @endforeach
+@endisset
 @endsection

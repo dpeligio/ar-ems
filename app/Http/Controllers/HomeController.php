@@ -30,33 +30,36 @@ class HomeController extends Controller
         $recentElectionChart = [];
         // $votes = [];
         $recentElection = Election::orderBy('start_date','DESC')->first();
-        foreach ($recentElection->candidates->groupBy('position_id') as $position => $candidates) {
-            $recentElectionChart[$position] = new RecentElectionChart;
-            $recentElectionChart[$position]->height(250);
-            $labels = [];
-            $votes = [];
-            foreach ($candidates as $candidate) {
-                $labels[] = $candidate->student->getStudentName($candidate->student_id);
-                $votes[] = $candidate->votes->count();
+        // if($recentElection->count() == 1)
+        if(isset($recentElection->id)){
+            foreach ($recentElection->candidates->groupBy('position_id') as $position => $candidates) {
+                $recentElectionChart[$position] = new RecentElectionChart;
+                $recentElectionChart[$position]->height(250);
+                $labels = [];
+                $votes = [];
+                foreach ($candidates as $candidate) {
+                    $labels[] = $candidate->student->getStudentName($candidate->student_id);
+                    $votes[] = $candidate->votes->count();
+                }
+                $recentElectionChart[$position]->labels($labels);
+                $recentElectionChart[$position]->dataset('votes', 'bar', $votes)->backgroundColor('#007bff')->color('#007bff');
+                $recentElectionChart[$position]->options([
+                    'scales' => [
+                        'yAxes' => [[
+                            'ticks' => [
+                                'stepSize' => 1,
+                                // 'max' => 5,
+                                // 'max' => 0
+                            ]
+                        ]],
+                        'xAxes' => [[
+                            'gridLines' => [
+                                'display' => true
+                            ]
+                        ]]
+                    ]
+                ]);
             }
-            $recentElectionChart[$position]->labels($labels);
-            $recentElectionChart[$position]->dataset('votes', 'bar', $votes)->backgroundColor('#007bff')->color('#007bff');
-            $recentElectionChart[$position]->options([
-                'scales' => [
-                    'yAxes' => [[
-                        'ticks' => [
-                            'stepSize' => 1,
-                            // 'max' => 5,
-                            // 'max' => 0
-                        ]
-                    ]],
-                    'xAxes' => [[
-                        'gridLines' => [
-                            'display' => true
-                        ]
-                    ]]
-                ]
-            ]);
         }
 
         $data = [
@@ -65,5 +68,8 @@ class HomeController extends Controller
         ];
 
         return view('dashboard', $data);
+        /* }else{
+            return view('dashboard');
+        } */
     }
 }

@@ -11,6 +11,16 @@ use Carbon\Carbon;
 
 class ElectionController extends Controller
 {
+    public function __construct()
+	{
+		$this->middleware('auth');
+		$this->middleware('permission:elections.index', ['only' => ['index']]);
+		$this->middleware('permission:elections.create', ['only' => ['create','store']]);
+		$this->middleware('permission:elections.show', ['only' => ['show']]);
+		$this->middleware('permission:elections.edit', ['only' => ['edit','update']]);
+		$this->middleware('permission:elections.destroy', ['only' => ['destroy']]);
+    }
+
     /**
      * Display a listing of the resource.
      *
