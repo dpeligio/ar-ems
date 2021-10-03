@@ -163,6 +163,7 @@
                     </li>
                     @endcan
                     @canany([
+                        'sections.index',
                         'positions.index',
                         'roles.index'
                     ])
@@ -176,19 +177,30 @@
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
+                            @can('sections.index')
+                            <li class="nav-item">
+                                <a href="{{ route('sections.index') }}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Sections</p>
+                                </a>
+                            </li>
+                            @endcan
+                            @can('positions.index')
                             <li class="nav-item">
                                 <a href="{{ route('positions.index') }}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Positions</p>
                                 </a>
                             </li>
+                            @endcan
+                            @can('roles.index')
                             <li class="nav-item">
                                 <a href="{{ route('roles.index') }}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Roles/Permissions</p>
                                 </a>
                             </li>
-                            
+                            @endcan
                         </ul>
                     </li>
                     @endcanany

@@ -233,6 +233,46 @@
     });
 </script>
 
+{{-- Initialize tempusdominus-bootstrap --}}
+<script type="application/javascript">
+    // Set default options
+    $.extend(true, $.fn.datetimepicker.Constructor.Default, {
+        icons: {
+            /* time: 'far fa-clock',
+            date: 'far fa-calendar',
+            up: 'fas fa-arrow-up',
+            down: 'fas fa-arrow-down',
+            previous: 'fas fa-chevron-left',
+            next: 'fas fa-chevron-right',
+            today: 'fas fa-calendar-check',
+            clear: 'far fa-trash-alt',
+            close: 'far fa-times-circle' */
+            time: 'far fa-clock',
+            date: 'far fa-calendar-alt',
+            up: 'fas fa-arrow-up',
+            down: 'fas fa-arrow-down',
+            previous: 'fas fa-chevron-left',
+            next: 'fas fa-chevron-right',
+            today: 'far fa-calendar-check',
+            clear: 'far fa-trash-alt',
+            close: 'fas fa-times'
+        },
+        buttons: {
+            showToday: true,
+            showClose: true,
+            showClear: true
+        }
+    });
+
+    // Initialize
+    $('.datetimepicker').datetimepicker();
+    $('.datetimepicker-no-time').datetimepicker({
+        buttons: {
+            time: false,
+        }
+    });
+</script>
+
 {{-- Initilize select2 --}}
 <script type="application/javascript">
     $(function() {

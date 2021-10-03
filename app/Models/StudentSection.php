@@ -23,6 +23,6 @@ class StudentSection extends Model
     }
 
     public function section(){
-        return $this->belongsTo('App\Models\Section', 'section_id');
+        return $this->belongsTo('App\Models\Configuration\Section', 'section_id');
     }
 }

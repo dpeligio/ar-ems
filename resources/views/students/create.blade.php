@@ -21,7 +21,7 @@
                                 <select class="form-control select2" name="section" required>
                                     <option></option>
                                     @foreach ($sections as $section)
-                                        <option value="{{ $section->id }}">
+                                        <option value="{{ $section->id }}" @if(old('section') == $section->id) selected @endif>
                                             {{ $section->year_level }}
                                             {{ $section->name }}
                                         </option>
@@ -30,40 +30,44 @@
                             </div>
                             <div class="form-group">
                                 <label>First Name:</label><br>
-                                <input class="form-control" type="text" name="first_name" required>
+                                <input class="form-control" type="text" name="first_name" value="{{ old('first_name') }}" required>
                             </div>
                             <div class="form-group">
                                 <label>Middle Name:</label><br>
-                                <input class="form-control" type="text" name="middle_name" required>
+                                <input class="form-control" type="text" name="middle_name" value="{{ old('middle_name') }}" required>
                             </div>
                             <div class="form-group">
                                 <label>Last Name:</label><br>
-                                <input class="form-control" type="text" name="last_name" required>
+                                <input class="form-control" type="text" name="last_name" value="{{ old('last_name') }}" required>
                             </div>
                             <div class="form-group">
                                 <label>Gender:</label><br>
                                 <div class="form-row">
                                     <div class="radio col-md-4">
                                         <div class="custom-control custom-radio">
-                                            <input required type="radio" class="custom-control-input" name="gender" value="Male" id="male">
+                                            <input required type="radio" class="custom-control-input" name="gender" value="Male" id="male" @if(old('gender') == 'Male') checked @endif>
                                             <label class="custom-control-label" for="male">Male</label>
                                         </div>
                                     </div>
                                     <div class="radio col-md-4">
                                         <div class="custom-control custom-radio">
-                                            <input required type="radio" class="custom-control-input" name="gender" value="Female" id="female">
+                                            <input required type="radio" class="custom-control-input" name="gender" value="Female" id="female" @if(old('gender') == 'Female') checked @endif>
                                             <label class="custom-control-label" for="female">Female</label>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
+                                <label>Birth Date:</label><br>
+                                <input class="form-control" type="date" name="birth_date" value="{{ old('birth_date') }}">
+                            </div>
+                            <div class="form-group">
                                 <label>Contact #:</label><br>
-                                <input class="form-control" type="text" name="contact_number">
+                                <input class="form-control" type="text" name="contact_number" value="{{ old('contact_number') }}">
                             </div>
                             <div class="form-group">
                                 <label>Address:</label>
-                                <textarea class="form-control" name="address" rows="3"></textarea>
+                                <textarea class="form-control" name="address" rows="3">{{ old('address') }}</textarea>
                             </div>
                         </div>
                         <div class="col-md-6">

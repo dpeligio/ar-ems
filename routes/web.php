@@ -51,6 +51,16 @@ Route::group(array('middleware'=>['auth']), function() {
 	]);
 
 	/**
+	 * Sections
+	 */
+	Route::resource('sections', 'Configuration\SectionController');
+	// restore
+	Route::post('sections_restore/{section}', [
+		'as' => 'sections.restore',
+		'uses' => 'Configuration\SectionController@restore'
+	]);
+
+	/**
 	 * Student
 	 */
 	Route::resource('students', 'StudentController');

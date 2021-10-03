@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Configuration;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -17,4 +17,9 @@ class Section extends Model
         'year_level',
         'name'
     ];
+
+    public function students()
+    {
+        return $this->hasMany('App\Models\StudentSection', 'section_id');
+    }
 }

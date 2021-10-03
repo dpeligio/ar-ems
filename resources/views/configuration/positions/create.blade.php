@@ -15,11 +15,11 @@
                             <div class="form-group">
 						        <label for="name">Name:</label>
 						        <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}">
-						        {{-- @if ($errors->has('name')) --}}
+						        @if ($errors->has('name'))
 						            <span class="invalid-feedback" role="alert">
 						                <strong>{{ $errors->first('name') }}</strong>
 						            </span>
-						        {{-- @endif --}}
+						        @endif
 						    </div>
                         </div>
                     </div>

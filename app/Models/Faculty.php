@@ -17,6 +17,7 @@ class Faculty extends Model
         'middle_name',
         'last_name',
         'gender',
+        'birth_date',
         'contact_number',
         'address'
     ];

@@ -37,13 +37,13 @@
                         </thead>
                         <tbody>
                             @foreach ($positions as $position)
-                            <tr @unlessrole('System Administrator') @can('positions.edit') data-toggle="modal-ajax" data-target="#editPosition" data-href="{{ route('positions.edit', $position->id) }}"  @endcan @else class="{{ $position->trashed() ? 'table-danger' : '' }}" @endunlessrole>
+                            <tr @unlessrole('System Administrator') @can('positions.show') data-toggle="modal-ajax" data-target="#editPosition" data-href="{{ route('positions.show', $position->id) }}"  @endcan @else class="{{ $position->trashed() ? 'table-danger' : '' }}" @endunlessrole>
                                 <td>{{ $position->id }}</td>
                                 <td>{{ $position->name }}</td>
                                 @role('System Administrator')
                                     <td class="text-center">
-                                        {{-- <a href="javascript:void(0)" data-toggle="modal-ajax" data-target="#showUser" data-href="{{ route('positions.show',$position->id) }}"><i class="fad fa-file-position fa-lg"></i></a> --}}
-                                        <a href="javascript:void(0)" data-toggle="modal-ajax" data-target="#editUser" data-href="{{ route('positions.edit',$position->id) }}"><i class="fad fa-edit fa-lg"></i></a>
+                                        <a href="javascript:void(0)" data-toggle="modal-ajax" data-target="#showPosition" data-href="{{ route('positions.show',$position->id) }}"><i class="fad fa-file-position fa-lg"></i></a>
+                                        {{-- <a href="javascript:void(0)" data-toggle="modal-ajax" data-target="#editPosition" data-href="{{ route('positions.edit',$position->id) }}"><i class="fad fa-edit fa-lg"></i></a> --}}
                                         @if ($position->trashed())
                                             <a class="text-success" href="javascript:void(0)" onclick="restoreFromTable(this)" data-href="{{ route('positions.restore', $position->id) }}"><i class="fad fa-download fa-lg"></i></a>
                                         @else

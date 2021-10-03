@@ -86,6 +86,7 @@ class StudentController extends Controller
 			'middle_name' => 'required',
 			'last_name' => 'required',
             'gender' => 'required',
+            'birth_date' => 'required',
             'contact_number' => ['unique:students,contact_number']
         ]);
 
@@ -95,6 +96,7 @@ class StudentController extends Controller
 			'middle_name' => $request->get('middle_name'),
 			'last_name' => $request->get('last_name'),
 			'gender' => $request->get('gender'),
+			'birth_date' => date('Y-m-d', strtotime($request->get('birth_date'))),
 			'contact_number' => $request->get('contact_number'),
 			'address' => $request->get('address'),
         ]);
@@ -205,6 +207,7 @@ class StudentController extends Controller
 			'middle_name' => 'required',
 			'last_name' => 'required',
             'gender' => 'required',
+            'birth_date' => 'required',
             'contact_number' => ['unique:students,contact_number,'.$student->id]
         ]);
 
@@ -213,7 +216,8 @@ class StudentController extends Controller
 			'first_name' => $request->get('first_name'),
 			'middle_name' => $request->get('middle_name'),
 			'last_name' => $request->get('last_name'),
-			'gender' => $request->get('gender'),
+            'gender' => $request->get('gender'),
+            'birth_date' => date('Y-m-d', strtotime($request->get('birth_date'))),
 			'contact_number' => $request->get('contact_number'),
 			'address' => $request->get('address'),
         ]);

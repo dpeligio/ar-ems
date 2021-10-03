@@ -65,6 +65,7 @@ class ElectionController extends Controller
             'title' => $request->get('title'),
             'description' => $request->get('description'),
             'start_date' => Carbon::parse($request->get('start_date')),
+            'end_date' => Carbon::parse($request->get('end_date')),
             'status' => "1"
         ]);
 
