@@ -17,10 +17,15 @@
                 <a href="#" class="d-block">
                     @if (Auth::user()->student)
                         {{ Auth::user()->student->student->first_name }}
+                        {{ Auth::user()->student->student->last_name }}
                     @elseif (Auth::user()->faculty)
+                        @if(Auth::user()->role->role_id == 1 || Auth::user()->role->role_id == 2)
+                        Administrator
+                        @else
                         {{ Auth::user()->faculty->faculty->first_name }}
+                        {{ Auth::user()->faculty->faculty->last_name }}
+                        @endif
                     @endif
-                    ({{ Auth::user()->username }})
                 </a>
             </div>
         </div>

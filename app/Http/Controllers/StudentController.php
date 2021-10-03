@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\Configuration\RolePermission\Role;
 use App\Models\User;
 use App\Models\UserStudent;
-use App\Models\Section;
+use App\Models\Configuration\Section;
 use App\Models\StudentSection;
 
 class StudentController extends Controller
