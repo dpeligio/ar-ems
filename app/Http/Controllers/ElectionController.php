@@ -7,7 +7,9 @@ use Illuminate\Http\Request;
 use App\Models\Configuration\Position;
 use App\Models\Student;
 use App\Models\Candidate;
+use App\Charts\OngoingElectionChart;
 use Carbon\Carbon;
+use Auth;
 
 class ElectionController extends Controller
 {
@@ -18,7 +20,7 @@ class ElectionController extends Controller
 		$this->middleware('permission:elections.create', ['only' => ['create','store']]);
 		$this->middleware('permission:elections.show', ['only' => ['show']]);
 		$this->middleware('permission:elections.edit', ['only' => ['edit','update']]);
-		$this->middleware('permission:elections.destroy', ['only' => ['destroy']]);
+        $this->middleware('permission:elections.destroy', ['only' => ['destroy']]);
     }
 
     /**
@@ -28,8 +30,12 @@ class ElectionController extends Controller
      */
     public function index()
     {
+        $elections = Election::select('*');
+        if(Auth::user()->hasrole('System Administrator')){
+            $elections = $elections->withTrashed();
+        }
         $data = [
-            'elections' => Election::get()
+            'elections' => $elections->get()
         ];
 
         return view('elections.index', $data);
@@ -70,13 +76,25 @@ class ElectionController extends Controller
             'start_date' => 'required',
             'description' => 'required',
         ]);
+        
+        $now = Carbon::now();
+        $start_date = Carbon::parse($request->get('start_date'));
+        $end_date = Carbon::parse($request->get('end_date'));
+        $status = 'incoming';
+
+        if($start_date->lt($now) && $end_date->gt($now)){
+            $status = 'ongoing';
+        }
+        elseif($end_date->lt($now)){
+            $status = 'ended';
+        }
 
         $election = Election::create([
             'title' => $request->get('title'),
             'description' => $request->get('description'),
             'start_date' => Carbon::parse($request->get('start_date')),
             'end_date' => Carbon::parse($request->get('end_date')),
-            'status' => "1"
+            'status' => $status
         ]);
 
         foreach($request->get('candidates') as $position => $candidates){
@@ -84,7 +102,7 @@ class ElectionController extends Controller
                 Candidate::create([
                     'student_id' => $candidate,
                     'election_id' => $election->id,
-                    'position_id' => $position
+                    'position_id' => $position,
                 ]);
             }
         }
@@ -116,7 +134,15 @@ class ElectionController extends Controller
      */
     public function edit(Election $election)
     {
-        //
+        $data = ([
+			'positions' => Position::get(),
+			'students' => Student::get(),
+			'election' => $election
+		]);
+
+		return response()->json([
+			'modal_content' => view('elections.edit', $data)->render()
+		]);
     }
 
     /**
@@ -128,7 +154,56 @@ class ElectionController extends Controller
      */
     public function update(Request $request, Election $election)
     {
-        //
+        $request->validate([
+			'title' => ['required', 'unique:elections,title,'.$election->id],
+            'start_date' => 'required',
+            'end_date' => 'required',
+            'description' => 'required',
+        ]);
+        $now = Carbon::now();
+        $start_date = Carbon::parse($request->get('start_date'));
+        $end_date = Carbon::parse($request->get('end_date'));
+        $status = 'incoming';
+
+        if($start_date->lt($now) && $end_date->gt($now)){
+            $status = 'ongoing';
+        }
+        elseif($end_date->lt($now)){
+            $status = 'ended';
+        }
+
+        $election->update([
+            'title' => $request->get('title'),
+            'description' => $request->get('description'),
+            'start_date' => $start_date,
+            'end_date' => $end_date,
+            'status' => $status
+        ]);
+
+        $selectedCandidatesIDs = [];
+
+        foreach($request->get('candidates') as $position => $candidates){
+            foreach($candidates as $candidate){
+                $query = Candidate::where([
+                    ['student_id', $candidate],
+                    ['election_id', $election->id],
+                    ['position_id', $position],
+                ])->doesntExist();
+                if($query){
+                    Candidate::create([
+                        'student_id' => $candidate,
+                        'election_id' => $election->id,
+                        'position_id' => $position,
+                    ]);
+                }
+                $selectedCandidatesIDs[] = $candidate;
+            }
+        }
+        $unselectedCandidatesID = Candidate::where([
+            ['election_id', $election->id],
+        ])->whereNotIn('student_id', $selectedCandidatesIDs)->delete();
+
+        return redirect()->route('elections.index')->with('alert-success', 'Saved');
     }
 
     /**
@@ -138,9 +213,23 @@ class ElectionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy(Election $election)
-    {
-        //
-    }
+	{
+		if (request()->get('permanent')) {
+			$election->forceDelete();
+		}else{
+			$election->delete();
+		}
+		return redirect()->route('elections.index')
+						->with('alert-danger','Deleted');
+	}
+
+	public function restore($election)
+	{
+		$election = Election::withTrashed()->find($election);
+		$election->restore();
+		return redirect()->route('elections.index')
+						->with('alert-success','Restored');
+	}
 
     public function getElectionData(Request $request, Election $election)
     {
@@ -150,5 +239,61 @@ class ElectionController extends Controller
         return response()->json([
 			'election_data' => view('votes.vote', $data)->render()
 		]);
+    }
+
+    public function updateStatus(Request $request, Election $election)
+    {
+        $now = Carbon::now();
+        $start_date = Carbon::parse($election->start_date);
+        $end_date = Carbon::parse($election->end_date);
+        if($start_date <= $now && $end_date <= $now){
+            $election->update(['status' => 'ongoing']);
+        }
+        elseif($now > $end_date){
+            $election->update(['status' => 'ended']);
+        }
+    }
+
+    public function results()
+    {
+        $recentElectionChart = [];
+        $recentElection = Election::where('status', 'ended')->orderBy('end_date','DESC')->first();
+        if(isset($recentElection->id)){
+            foreach ($recentElection->candidates->groupBy('position_id') as $position => $candidates) {
+                $recentElectionChart[$position] = new OngoingElectionChart;
+                $recentElectionChart[$position]->height(250);
+                $labels = [];
+                $votes = [];
+                foreach ($candidates as $candidate) {
+                    $labels[] = $candidate->student->getStudentName($candidate->student_id);
+                    $votes[] = $candidate->votes->count();
+                }
+                $recentElectionChart[$position]->labels($labels);
+                $recentElectionChart[$position]->dataset('votes', 'bar', $votes)->backgroundColor('#007bff')->color('#007bff');
+                $recentElectionChart[$position]->options([
+                    'scales' => [
+                        'yAxes' => [[
+                            'ticks' => [
+                                'stepSize' => 1,
+                                // 'max' => 5,
+                                // 'max' => 0
+                            ]
+                        ]],
+                        'xAxes' => [[
+                            'gridLines' => [
+                                'display' => true
+                            ]
+                        ]]
+                    ]
+                ]);
+            }
+        }
+
+        $data = [
+            'recentElectionChart' => $recentElectionChart,
+            'recentElection' => $recentElection,
+        ];
+
+        return view('elections.results', $data);
     }
 }

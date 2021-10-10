@@ -7,7 +7,11 @@ use App\Models\Student;
 use App\Models\Configuration\Section;
 use App\Models\StudentSection;
 use App\Models\Faculty;
+use App\Models\UserStudent;
+use App\Models\UserFaculty;
+use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Hash;
 
 class RandomIdentityController extends Controller
 {
@@ -22,22 +26,41 @@ class RandomIdentityController extends Controller
 			$middle_name = $this->lname();
 			list($brgy, $city, $province) = $this->address();
 			list($sex, $fname) = $this->fname();
+			$bdate = $this->bdate();
+			$studentID = $this->student_id();
+			$contactNumber = $this->phone();
+
 			$student = Student::create([
-				'student_id' => $this->student_id(),
+				'student_id' => $studentID,
 				'first_name' => $fname,
 				'middle_name' => $middle_name,
 				'last_name' => $last_name,
 				'gender' => $sex,
-				'birth_date' => $this->bdate(),
-				'contact_number' => $this->phone(),
+				'birth_date' => $bdate,
+				'contact_number' => $contactNumber,
 				'address' => ($brgy == '' ? '' : $brgy . ', ') . $city . ', ' . $province
 			]);
 			
-			$section = Section::inRandomOrder()->first();
+			$section = Section::where('stage', $request->get('stage'))->inRandomOrder()->first();
 			StudentSection::create([
 				'student_id' => $student->id,
 				'section_id' => $section->id
 			]);
+
+			if($request->get('add_account') == 'add_account'){
+				// $email = $this->email($student->first_name, $last_name, $student->student_id);
+				$user = User::create([
+					'username' => $student->student_id,
+					'email' => $student->student_id.'@gmail.com',
+					'password' => Hash::make('asdasd')
+				]);
+	
+				$user->assignRole(4);
+				UserStudent::create([
+					'user_id' => $user->id,
+					'student_id' => $student->id
+				]);
+			}
 
 
 		}
@@ -63,16 +86,31 @@ class RandomIdentityController extends Controller
 			$mname = $this->lname();
 
 			$bdate = $this->bdate();
-			Faculty::create([
-				'faculty_id' => $this->student_id(),
+			$faculty = Faculty::create([
+				'faculty_id' => $this->faculty_id(),
 				'first_name' => $fname,
 				'middle_name' => $mname,
 				'last_name' => $lname,
 				'gender' => $sex,
-				'birth_date' => $this->bdate(),
+				'birth_date' => $bdate,
 				'contact_number' => $this->phone(),
 				'address' => ($brgy == '' ? '' : $brgy . ', ') . $city . ', ' . $province
 			]);
+
+			if($request->get('add_account') == 'add_account'){
+				$email = $this->email($fname, $lname, $faculty->faculty_id);
+				$user = User::create([
+					'username' => $faculty->faculty_id,
+					'email' => $email,
+					'password' => Hash::make('asdasd')
+				]);
+	
+				$user->assignRole(3);
+				UserFaculty::create([
+					'user_id' => $user->id,
+					'faculty_id' => $faculty->id
+				]);
+			}
 
 		}
 
@@ -108,20 +146,19 @@ class RandomIdentityController extends Controller
 
 
 		if ($this->student_id_exist($number)) {
-			return uniqueID();
+			return student_id();
 		}
 
 		// otherwise, it's valid and can be used
 		return $number;
 	}
 
-	public function employee_id()
+	public function faculty_id()
 	{
 		$number = mt_rand(100000000, 999999999); // better than rand()
 
-
-		if ($this->employee_id_exist($number)) {
-			return uniqueID();
+		if ($this->faculty_id_exist($number)) {
+			return faculty_id();
 		}
 
 		// otherwise, it's valid and can be used
@@ -130,25 +167,54 @@ class RandomIdentityController extends Controller
 
 	public function student_id_exist($number)
 	{
-		return Student::where('student_id', $number)->exists();
+		if(
+			Student::where('student_id', $number)->exists()
+			|| Faculty::where('faculty_id', $number)->exists()
+		){
+			return True;
+		}else{
+			return False;
+		}
+		// return Student::where('student_id', $number)->exists();
 	}
 
-	public function employee_id_exist($number)
+	public function faculty_id_exist($number)
 	{
-		return Faculty::where('faculty_id', $number)->exists();
+		if(
+			Student::where('student_id', $number)->exists()
+			|| Faculty::where('faculty_id', $number)->exists()
+		){
+			return True;
+		}else{
+			return False;
+		}
+		// return Faculty::where('faculty_id', $number)->exists();
 	}
 
-	public function job_title()
+	/* public function email_exist($email)
 	{
-		$n = array(
-			'Nurse',
-			'Medical Technologist',
-			'Doctor',
-			'Doctor',
-		);
-		$random = $n[mt_rand(0, sizeof($n) - 1)];
-		return $random;
+		if(
+			User::where('email', $email)->exists()
+			|| Student::where('email', $email)->exists()
+			|| Faculty::where('email', $email)->exists()
+		){
+			return True;
+		}else{
+			return False;
+		}
+	} */
 
+	public function email($fname, $lname, $number)
+	{
+		$first_name = explode(" ", strtolower($fname));
+		$fname_acronym = "";
+		foreach ($first_name as $letter) {
+			$fname_acronym .= $letter[0];
+		}
+
+		$email = $fname_acronym.'.'.strtolower(preg_replace('/\s+/', ' ', $lname)).$number.'@gmail.com';
+
+		return $email;
 	}
 
 	public function religion()
@@ -1551,7 +1617,11 @@ class RandomIdentityController extends Controller
 		$random = $n[mt_rand(0, sizeof($n) - 1)];
 		$mid = mt_rand(100, 999);
 		$last = mt_rand(1000, 9999);
-		return $random.$mid.$last;
+		$phoneNumber = $random.$mid.$last;
+		if(Student::where('contact_number', $phoneNumber)->exists()){
+			return $this->phone();
+		}
+		return $phoneNumber;
 
 	}
 

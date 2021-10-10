@@ -59,14 +59,16 @@ class PositionController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-			'name' => 'required'
-		]);
-
-		Position::create([
-			'name' => $request->get('name')
+            'name' => 'required|unique:positions,name',
+            'candidate_to_elect' => 'required|integer|gt:0|',
         ]);
+
+        Position::create([
+            'name' => $request->get('name'),
+            'candidate_to_elect' => $request->get('candidate_to_elect'),
+        ]);
+        return redirect()->route('positions.show')->with('alert-success', 'Saved');
         
-		return back()->with('alert-success', 'Saved');
     }
 
     /**
@@ -78,7 +80,7 @@ class PositionController extends Controller
     public function show(Position $position)
     {
         $data = ([
-			'position' => $position,
+			'position_show' => $position,
 		]);
 		/* if(!Auth::user()->hasrole('System Administrator')){
 			$data = ([
@@ -117,11 +119,13 @@ class PositionController extends Controller
     public function update(Request $request, Position $position)
     {
         $request->validate([
-			'name' => 'required'
+			'name' => 'required',
+			'candidate_to_elect' => 'required',
 		]);
 
 		$position->update([
-			'status' => $request->get('name')
+			'name' => $request->get('name'),
+			'candidate_to_elect' => $request->get('candidate_to_elect'),
 		]);
 
 		return redirect()->route('positions.index')

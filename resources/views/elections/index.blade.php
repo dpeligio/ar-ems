@@ -43,10 +43,23 @@
                             @role('System Administrator')
                             <td>{{ $election->id }}</td>
                             @endrole
-                            <td>{{ $election->status }}</td>
+                            <td>
+                               {{--  @if($election->start_date->gt(Carbon\Carbon::now()))
+                                Incoming
+                                @elseif($election->start_date->lt(Carbon\Carbon::now()) && $election->end_date->gt(Carbon\Carbon::now()))
+                                Ongoing
+                                @elseif($election->end_date->lt(Carbon\Carbon::now()))
+                                Ended
+                                @endif --}}
+                                {{ $election->status }}
+                            </td>
                             <td>{{ $election->title }}</td>
                             <td>{{ $election->description }}</td>
-                            <td>{{ $election->election_date }}</td>
+                            <td>
+                                {{ date('F d, Y h:i A', strtotime($election->start_date)) }}
+                                -
+                                {{ date('F d, Y h:i A', strtotime($election->end_date)) }}
+                            </td>
                             @role('System Administrator')
                                 <td class="text-center">
                                     <a href="javascript:void(0)" data-toggle="modal-ajax" data-target="#showElection" data-href="{{ route('elections.show',$election->id) }}"><i class="fad fa-file fa-lg"></i></a>

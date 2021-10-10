@@ -15,7 +15,9 @@
                         {{ $election_show->description }}
                         <br>
                         <label>Election Date: </label>
-                        {{ $election_show->election_date }}
+                        {{ date('F d, Y h:i A', strtotime($election_show->start_date)) }}
+                        -
+                        {{ date('F d, Y h:i A', strtotime($election_show->end_date)) }}
                     </div>
                 </div>
                 <hr>
@@ -32,9 +34,9 @@
                             </thead>
                             <tbody>
                                 @foreach ($candidates as $candidate)
-                                <tr>
+                                <tr class="{{ $candidate->trashed() ? 'table-danger' : ''}}">
                                     <td>
-                                        {{ $candidate->student->id}} - {{ $candidate->student->getStudentName($candidate->student_id) }}
+                                        {{-- {{ $candidate->student->id}} -  --}}{{ $candidate->student->getStudentName($candidate->student_id) }}
                                     </td>
                                     <td>
                                         {{ $candidate->votes->count() ?? "N/A" }}
@@ -43,7 +45,7 @@
                                 @endforeach
                             </tbody>
                         </table>
-                        <hr>
+                        {{-- <hr> --}}
                     </div>
                     @endforeach
                 </div>
@@ -60,7 +62,7 @@
 						@endcan
 					@endif
 					@can('elections.edit')
-					   <a class="btn btn-default text-primary" href="javascript:void(0)" data-toggle="modal-ajax" data-href="{{ route('elections.edit', $election_show->id) }}" data-target="#editStudent"><i class="fad fa-edit"></i> Edit</a>
+					   <a class="btn btn-default text-primary" href="javascript:void(0)" data-toggle="modal-ajax" data-href="{{ route('elections.edit', $election_show->id) }}" data-target="#editElection"><i class="fad fa-edit"></i> Edit</a>
 					@endcan
 				</div>
 				<div class="col text-right">

@@ -58,4 +58,14 @@ class User extends Authenticatable
         return $this->hasOne('App\Models\userFaculty', 'user_id');
     }
 
+    public function isOfficer()
+    {
+        if(isset($this->student->id)){
+            if($this->student->student->isOfficer()){
+                return True;
+            }
+        }
+        return False;
+    }
+
 }

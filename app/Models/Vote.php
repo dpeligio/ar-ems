@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Wildside\Userstamps\Userstamps;
+use App\Models\VoteData;
 
 class Vote extends Model
 {
@@ -30,5 +31,16 @@ class Vote extends Model
     public function vote_data()
     {
         return $this->hasMany('App\Models\VoteData', 'vote_id');
+    }
+
+    public function isVotedCandidate($candidateID)
+    {
+        if(VoteData::where([
+            ['vote_id', $this->id],
+            ['candidate_id', $candidateID],
+        ])->exists()){
+            return True;
+        }
+        return False;
     }
 }

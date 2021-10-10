@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSectionsTable extends Migration
+class CreateTasksTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,16 @@ class CreateSectionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('sections', function (Blueprint $table) {
+        Schema::create('tasks', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('year_level');
-            $table->enum('stage', ['secondary', 'tertiary']);
-            $table->string('name');
+            $table->unsignedBigInteger('student_id');
+            $table->foreign('student_id')->references('id')
+                ->on('students')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+            $table->boolean('is_done')->default(false)->nullable();
+            $table->string('task');
+            $table->text('description')->nullable();
             $table->unsignedBigInteger('created_by')->nullable();
 			$table->unsignedBigInteger('updated_by')->nullable();
 			$table->unsignedBigInteger('deleted_by')->nullable();
@@ -33,6 +38,6 @@ class CreateSectionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sections');
+        Schema::dropIfExists('tasks');
     }
 }

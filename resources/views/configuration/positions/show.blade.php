@@ -1,4 +1,4 @@
-<div class="modal fade" id="createPosition" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" id="showPosition" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-md" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -23,9 +23,9 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($position_show->candidate as $item)
+                                {{-- @foreach ($position_show->candidate as $item)
                                     
-                                @endforeach
+                                @endforeach --}}
                             </tbody>
                         </table>
                     </div>

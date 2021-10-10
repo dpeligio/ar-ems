@@ -182,7 +182,7 @@ class RoleController extends Controller
 			$role->delete();
 		}
 		return redirect()->route('roles.index')
-						->with('alert-danger','Role successfully deleted');
+						->with('alert-danger','Deleted');
 	}
 
 	public function restore($role)
@@ -190,6 +190,6 @@ class RoleController extends Controller
 		$role = Role::withTrashed()->find($role);
 		$role->restore();
 		return redirect()->route('roles.index')
-						->with('alert-success','Role successfully restored');
+						->with('alert-success','Restored');
 	}
 }

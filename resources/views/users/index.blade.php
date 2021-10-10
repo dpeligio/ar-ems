@@ -15,7 +15,7 @@
             <div class="col-sm-6">
                 <h1 class="m-0 text-dark">Users</h1>
             </div>
-            <div class="col-md-6 text-right">
+            {{-- <div class="col-md-6 text-right">
                 <form action="{{ route('users.index') }}" method="GET" autocomplete="off">
                     <div class="form-row">
                         <div class="form-group col">
@@ -38,7 +38,7 @@
                         @endcan
                     </div>
                 </form>
-            </div>
+            </div> --}}
         </div>
         {{-- /.row --}}
     </div>
@@ -50,14 +50,15 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col">
-                <div class="table-responsive">
-                    <table class="table table-bordered table-hover table-sm">
+                {{-- <div class="table-responsive"> --}}
+                    <table id="datatable" class="table table-bordered table-hover table-sm">
                         <thead>
                             <tr>
                                 @role('System Administrator')
                                 <th>ID</th>
                                 @endrole
                                 <th>Role</th>
+                                <th>Name</th>
                                 <th>Username</th>
                                 <th>Email</th>
                                 @role('System Administrator')
@@ -74,6 +75,13 @@
                             </td>
                             @endif
                             <td>{{ $user->role->role->name }}</td>
+                            <td>
+                                @isset($user->student->student)
+                                    {{ $user->student->student->fullname('f-m-l') }}
+                                @else
+                                    {{ $user->faculty->faculty->fullname('f-m-l') }}
+                                @endif
+                            </td>
                             <td>{{ $user->username }}</td>
                             <td>{{ $user->email }}</td>
                             @role('System Administrator')
@@ -98,7 +106,7 @@
                             @endif
                         </tbody>
                     </table>
-                </div>
+                {{-- </div> --}}
                 {{-- <span class="justify-content-center row">{!! $users->links() !!}</span> --}}
             </div>
         </div>

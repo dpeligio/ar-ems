@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Wildside\Userstamps\Userstamps;
+use App\Models\Election;
+use App\Models\Configuration\Position;
 
 class Candidate extends Model
 {
@@ -34,6 +36,33 @@ class Candidate extends Model
     public function votes()
     {
         return $this->hasMany('App\Models\VoteData', 'candidate_id');
+    }
+
+    public function officers()
+    {
+        $candidateIDs = [];
+        $latestElection = Election::where('status', 'ended')->orderBy('end_date','DESC')->first();
+        foreach($election->candidates->groupedBy('position_id') as $position => $candidates)
+        {
+            $position = Position::find($position);
+            $elected = 0;
+            $highestVote = 0;
+            foreach ($candidates as $candidate) {
+                if($highestVote < $candidate->votes->count()){
+                    $elected = $candidate->id;
+                    $highestVote = $candidate->votes->count();
+                }
+            }
+            $candidateIDs[] = $elected;
+        }
+    }
+
+    public function isElected()
+    {
+        $candidates = VoteData::where('position_id', $this->position_id)
+        ->groupedBy('candidate_id')
+        ->get();
+        
     }
     
 }

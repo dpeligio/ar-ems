@@ -6,7 +6,11 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1 class="m-0">Dashboard</h1>
+                <h1 class="m-0">
+                    @isset($recentElection->id)
+                        {{ $recentElection->title }}
+                    @endif
+                </h1>
             </div>
             <!-- /.col -->
             {{-- <div class="col-sm-6">
@@ -83,15 +87,12 @@
         </div> --}}
         <div class="row">
             <div class="col-lg-12">
-                @isset($ongoingElection->id)
+                @isset($recentElection->id)
                 <div class="card">
-                    <div class="card-header text-center">
-                        <h4 class="card-title">Ongoing Election</h4>
-                    </div>
                     <div class="card-body">
                         <div class="position-relative mb-4">
                             <div class="row">
-                                @foreach ($ongoingElection->candidates->groupBy('position_id') as $position => $candidates)
+                                @foreach ($recentElection->candidates->groupBy('position_id') as $position => $candidates)
                                     <div class="col-md-3">
                                         <div class="card">
                                             <div class="card-header border-0">
@@ -102,14 +103,14 @@
                                             </div>
                                             <div class="card-body">
                                                 <div class="position-relative mb-4">
-                                                    {!! $ongoingElectionChart[$position]->container() !!}
+                                                    {!! $recentElectionChart[$position]->container() !!}
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 @endforeach
                             </div>
-                            {{-- {!! $ongoingElectionChart->container() !!} --}}
+                            {{-- {!! $recentElectionChart->container() !!} --}}
                         </div>
                         {{-- <div class="d-flex flex-row justify-content-end">
                             <span class="mr-2">
@@ -142,9 +143,9 @@
 
 @section('script')
 <script src="{{ asset('AdminLTE-3.1.0/plugins/chart.js/Chart.min.js') }}"></script>
-@isset($ongoingElection->id)
-    @foreach ($ongoingElection->candidates->groupBy('position_id') as $position => $candidates)
-    {!! $ongoingElectionChart[$position]->script() !!}
+@isset($recentElection->id)
+    @foreach ($recentElection->candidates->groupBy('position_id') as $position => $candidates)
+    {!! $recentElectionChart[$position]->script() !!}
     @endforeach
 @endisset
 @endsection

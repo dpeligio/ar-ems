@@ -15,9 +15,9 @@ class CreateElectionsTable extends Migration
     {
         Schema::create('elections', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('status');
+            $table->enum('status', ['incoming', 'ongoing', 'ended']);
             $table->string('title');
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->timestamp('start_date')->nullable();
             $table->timestamp('end_date')->nullable();
             $table->unsignedBigInteger('created_by')->nullable();

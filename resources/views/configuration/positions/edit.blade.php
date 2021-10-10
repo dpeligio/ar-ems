@@ -21,6 +21,15 @@
 						                <strong>{{ $errors->first('name') }}</strong>
 						            </span>
 						        @endif
+                            </div>
+                            <div class="form-group">
+						        <label for="candidate_to_elect">Candidate to Elect:</label>
+						        <input id="candidate_to_elect" type="number" min="1" class="form-control{{ $errors->has('candidate_to_elect') ? ' is-invalid' : '' }}" name="candidate_to_elect" value="{{ old('candidate_to_elect') ?? $position_edit->candidate_to_elect }}">
+						        @if ($errors->has('candidate_to_elect'))
+						            <span class="invalid-feedback" role="alert">
+						                <strong>{{ $errors->first('candidate_to_elect') }}</strong>
+						            </span>
+						        @endif
 						    </div>
                         </div>
                     </div>

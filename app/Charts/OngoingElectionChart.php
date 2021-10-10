@@ -4,7 +4,7 @@ namespace App\Charts;
 
 use ConsoleTVs\Charts\Classes\Chartjs\Chart;
 
-class RecentElectionChart extends Chart
+class OngoingElectionChart extends Chart
 {
     /**
      * Initializes the chart.

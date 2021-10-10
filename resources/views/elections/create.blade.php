@@ -19,7 +19,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Description:</label>
-                                <textarea name="description" rows="4" class="form-control" required></textarea>
+                                <textarea name="description" rows="4" class="form-control"></textarea>
                             </div>
                             <div class="form-group">
                                 <label>Election Start Date:</label>
@@ -43,11 +43,18 @@
                         <div class="col-md-6">
                             <legend>Candidates:</legend>
                             @foreach ($positions as $position)
+                            <script type="text/javascript">
+                                $(function(){
+                                    $('#oldInput').find('input[name="old_candidates[{{ $position->id}}][]"]').each(function(){
+                                        $('select[name="candidates[{{ $position->id}}][]"] > option[value="'+$(this).val()+'"').prop('selected', true)
+                                    })
+                                })
+                            </script>
                             <div class="form-group col-md-12">
                                 <label>{{ $position->name }}:</label>
-                                <select class="form-control select2" multiple  name="candidates[{{ $position->id}}][]" style="width: 100%" required>
+                                <select class="form-control candidates-select2" multiple name="candidates[{{ $position->id}}][]" data-position-id="{{ $position->id}}" style="width: 100%">
                                     @foreach ($students as $student)
-                                        <option value="{{ $student->id }}">{{ $student->getStudentName($student->id) }}</option>
+                                        <option value="{{ $student->id }}">{{ $student->getStudentNameLNF() }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -62,3 +69,70 @@
         </div>
     </div>
 </form>
+<script type="text/javascript">
+    $(function(){
+        $('.candidates-select2').select2({
+            // sorter: data => data.sort((a, b) => a.text.localeCompare(b.text)),
+            theme: "bootstrap4",
+            placeholder: "Select",
+            allowClear: true
+        })
+
+        var selectedCandidatesOptions = [];
+
+        $('.candidates-select2').change(function(){
+            $('#loader').fadeIn();
+            var value = $(this).val();
+            var id = $(this).data('position-id');
+            // removed options on other position options
+            var selectedOptions = [];
+            $('.candidates-select2').each(function(){
+                // insert all selected candidates on array
+                $('.candidates-select2[data-position-id="'+$(this).data('position-id')+'"] :selected').each(function(){
+                    var candidate = '<option value="' + $(this).attr('value') + '">' + $(this).html() + '</option>';
+                    selectedOptions.push(candidate)
+                })
+                if($(this).data('position-id') != id) {
+                    for (let index = 0; index < value.length; index++) {
+                        var removeCandidate = $('.candidates-select2[data-position-id="'+$(this).data('position-id')+'"] > option[value="'+value[index]+'"]');
+                        var candidateOption = '<option value="' + value[index] + '">' + removeCandidate.html() + '</option>';
+                        if(selectedCandidatesOptions.indexOf(candidateOption) == -1 && removeCandidate.html() != undefined){
+                            selectedCandidatesOptions.push(candidateOption)
+                        }
+                        // remove selected candidate on other position options
+                        removeCandidate.remove() 
+                    }
+
+                }
+                
+            })
+
+            // Finalized selected candidates
+            for (let index = 0; index < selectedCandidatesOptions.length; index++) {
+                var removedOption = selectedCandidatesOptions[index]
+                var indexOfFinalSelected = selectedOptions.indexOf(selectedCandidatesOptions[index]);
+                if(indexOfFinalSelected == -1){
+                    // insert removed candidate
+                    $('.candidates-select2').each(function(){
+                        if($(this).data('position-id') != id) {
+                            $('.candidates-select2[data-position-id="'+$(this).data('position-id')+'"]').prepend(removedOption)
+                        }
+                    })
+                    selectedCandidatesOptions.splice(index, 1)
+                }
+            }
+
+            $('.candidates-select2').each(function(){
+                if($(this).data('position-id') != id) {
+                    $(this).select2({
+                        // sorter: data => data.sort((a, b) => a.text.localeCompare(b.text)),
+                        theme: "bootstrap4",
+                        placeholder: "Select",
+                        allowClear: true
+                    })
+                }
+            })
+            $('#loader').fadeOut();
+        })
+    })
+</script>

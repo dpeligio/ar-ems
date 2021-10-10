@@ -29,6 +29,7 @@
                 $('ul.nav-treeview li a').filter(function() {
                     if(url == $(this).attr('href')){
                         $(this).parent().parent().parent().addClass('menu-open')
+                        $(this).parent().parent().parent().find('a[href="#"]').addClass('active')
                     }
                 })
             })
@@ -54,9 +55,28 @@
         <link rel="stylesheet" href="{{ asset('AdminLTE-3.1.0/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
         <link rel="stylesheet" href="{{ asset('AdminLTE-3.1.0/plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
 
+        <style>
+            .loader {
+                height: 100%;
+                position: fixed;
+                width: 100%;
+                z-index: 9999999;
+                background-color: #ffffff5c;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+            }
+            .loader svg {
+                -webkit-transform: translate(0, -50%);
+                -ms-transform: translate(0, -50%);
+                -o-transform: translate(0, -50%);
+                transform: translate(0, -50%);
+            }
+        </style>
         @yield('style')
     </head>
-    <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
+    <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed accent-success">
+        @include('partials.loader')
         <div class="wrapper">
             <!-- Preloader -->
             {{-- <div class="preloader flex-column justify-content-center align-items-center">
@@ -64,7 +84,7 @@
             </div> --}}
             {{-- @auth --}}
             <!-- Navbar -->
-            <nav class="main-header navbar navbar-expand navbar-dark">
+            <nav class="main-header navbar navbar-expand navbar-dark navbar-success text-sm">
                 <!-- Left navbar links -->
                 <ul class="navbar-nav">
                     <li class="nav-item">
@@ -79,6 +99,43 @@
                 </ul>
                 <!-- Right navbar links -->
                 <ul class="navbar-nav ml-auto">
+                    @auth
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" data-toggle="dropdown" href="#">
+                        <i class="fas fa-bullhorn"></i>
+                        <span class="badge badge-warning navbar-badge">15</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                            <span class="dropdown-item dropdown-header">15 Announcements</span>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item">
+                            <i class="fas fa-envelope mr-2"></i> 4 new messages
+                            <span class="float-right text-muted text-sm">3 mins</span>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item">
+                            <i class="fas fa-users mr-2"></i> 8 friend requests
+                            <span class="float-right text-muted text-sm">12 hours</span>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item">
+                            <i class="fas fa-file mr-2"></i> 3 new reports
+                            <span class="float-right text-muted text-sm">2 days</span>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
+                        </div>
+                    </li>
+                    {{-- <li class="nav-item d-none d-sm-inline-block">
+                        <a href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();" class="nav-link">
+                            <i class="nav-icon fas fa-sign-out"></i>
+                            Logout
+                        </a>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            @csrf
+                        </form>
+                    </li> --}}
+                    @endauth
                     <!-- Navbar Search -->
                     {{-- <li class="nav-item">
                         <a class="nav-link" data-widget="navbar-search" href="#" role="button">
@@ -231,9 +288,19 @@
         <div class="d-none" id="oldInput">
             @forelse (old() as $input => $value)
                 @if (is_array($value))
-                    @foreach ($value as $arrayValue)
-                        <input type="text" name="old_{{ $input }}[]" value="{{ $arrayValue }}">
-                    @endforeach
+                    @if($input == 'candidates')
+                        @foreach ($value as $id => $arrayValue)
+                            <script>console.log('{{ $input."[".$id."]" }}')</script>
+                            @foreach ($arrayValue as $value)
+                            <script>console.log(' - {{ $value }}')</script>
+                            <input type="text" name="old_{{ $input."[".$id."][]" }}" value="{{ $value }}">
+                            @endforeach
+                        @endforeach
+                    @else
+                        @foreach ($value as $arrayValue)
+                            <input type="text" name="old_{{ $input }}[]" value="{{ $arrayValue }}">
+                        @endforeach
+                    @endif
                 @else
                     <input type="text" name="old_{{ $input }}" value="{{ $value }}" data-error="{{ $errors->has($input) ? ' is-invalid' : '' }}" data-error-message="{{ $errors->first($input) }}">
                 @endif

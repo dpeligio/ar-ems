@@ -102,6 +102,14 @@ class RolePermissionSeeder extends Seeder
                 ['name', 'NOT LIKE', '%destroy%'],
             ])->get()
         );
+        $student->givePermissionTo(
+            Permission::where([
+                ['group', '=', 'tasks'],
+                ['name', 'NOT LIKE', '%create%'],
+                ['name', 'NOT LIKE', '%edit%'],
+                ['name', 'NOT LIKE', '%destroy%'],
+            ])->get()
+        );
         
     }
 }

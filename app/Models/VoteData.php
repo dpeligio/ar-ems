@@ -30,4 +30,5 @@ class VoteData extends Model
     public function vote(){
         return $this->belongsTo('App\Models\Vote', 'vote_id');
     }
+
 }

@@ -77,15 +77,23 @@
                     <div class="col-md-3">
                         <div class="card">
                             <div class="card-header">
-                                Insert Dummy Facultys
+                                Insert Dummy Faculty
                             </div>
                             <div class="card-body">
                                 <form class="form-horizontal" action="{{ route('dummy_identity.insert_faculty') }}" method="post" enctype="multipart/form-data">
                                     @csrf
                                     <hr>
                                     <div class="form-group">
-                                        <label>Number of Facultys: </label>
+                                        <label>Number of Faculty: </label>
                                         <input class="form-control" type="number" name="number" max="15000" min="1" value="1">
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="checkbox">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" name="add_account" value="add_account" id="addAccount">
+                                                <label class="custom-control-label" for="addAccount">Add User Account</label>
+                                            </div>
+                                        </div>
                                     </div>
                                     <hr>
                                     <button type="submit" class="btn btn-danger">Submit</button>					

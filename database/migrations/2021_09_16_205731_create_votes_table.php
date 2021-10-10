@@ -17,15 +17,15 @@ class CreateVotesTable extends Migration
             $table->bigIncrements('id');
             $table->string('vote_number')->unique();
             $table->unsignedBigInteger('election_id');
-            /* $table->foreign('election_id')->references('id')
+            $table->foreign('election_id')->references('id')
                 ->on('elections')
                 ->onDelete('cascade')
-                ->onUpdate('cascade'); */
+                ->onUpdate('cascade');
             $table->unsignedBigInteger('voter_id');
-            /* $table->foreign('voter_id')->references('id')
+            $table->foreign('voter_id')->references('id')
                 ->on('users')
                 ->onDelete('cascade')
-                ->onUpdate('cascade'); */
+                ->onUpdate('cascade');
             $table->unsignedBigInteger('created_by')->nullable();
 			$table->unsignedBigInteger('updated_by')->nullable();
 			$table->unsignedBigInteger('deleted_by')->nullable();

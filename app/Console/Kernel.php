@@ -4,6 +4,8 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use App\Models\Election;
+use Carbon\Carbon;
 
 class Kernel extends ConsoleKernel
 {
@@ -24,8 +26,31 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        /* $schedule->command('config:cache')
+                 ->everyMinute(); */
+        $schedule->call(function(){
+            $now = Carbon::now();
+            $activeElections = Election::get();
+            if($activeElections->count() > 0){
+                foreach($activeElections as $activeElection){
+                    // $election = Election::find($activeElection->id);
+                    if($activeElection->start_date->gt($now)){
+                        Election::find($activeElection->id)->update(['status' => 'incoming']);
+                    }
+                    elseif($activeElection->start_date->lt($now) && $activeElection->end_date->gt($now)){
+                        Election::find($activeElection->id)->update(['status' => 'ongoing']);
+                    }
+                    elseif($activeElection->end_date->lt($now)){
+                        Election::find($activeElection->id)->update(['status' => 'ended']);
+                    }
+                }
+            }
+        })->everyMinute();
+        /* $schedule->call(function(){
+            echo "sample";
+        })->everyMinute()
+        ->runInBackground(); */
+        
     }
 
     /**

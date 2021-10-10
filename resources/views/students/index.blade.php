@@ -55,10 +55,11 @@
                                 </td>
                                 <td>{{ $student->student_id }}</td>
                                 <td>
-                                    {{ $student->section->section->year_level ?? "" }}
-                                    {{ $student->section->section->name ?? "" }}
+                                    {{ isset($student->section) ? $student->section->section->getYearSection() : "" }}
+                                    {{-- {{ $student->section->section->year_level ?? "" }}
+                                    {{ $student->section->section->name ?? "" }} --}}
                                 </td>
-                                <td>{{ $student->first_name }}</td>
+                                <td>{{ $student->fullname('l-f-M') }}</td>
                                 <td>{{ $student->middle_name }}</td>
                                 <td>{{ $student->last_name }}</td>
                                 @role('System Administrator')
@@ -91,6 +92,26 @@
                                     <div class="form-group">
                                         <label>Number of Students: </label>
                                         <input class="form-control" type="number" name="number" max="15000" min="1" value="1">
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="checkbox">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" name="add_account" value="add_account" id="addAccount" checked>
+                                                <label class="custom-control-label" for="addAccount">Add User Account</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="radio">
+                                            <div class="custom-control custom-radio">
+                                                <input type="radio" class="custom-control-input" name="stage" value="secondary" id="secondaryStage" checked>
+                                                <label class="custom-control-label" for="secondaryStage">Secondary</label>
+                                            </div>
+                                            <div class="custom-control custom-radio">
+                                                <input type="radio" class="custom-control-input" name="stage" value="tertiary" id="tertiaryStage">
+                                                <label class="custom-control-label" for="tertiaryStage">Tertiary</label>
+                                            </div>
+                                        </div>
                                     </div>
                                     <hr>
                                     <button type="submit" class="btn btn-danger">Submit</button>					

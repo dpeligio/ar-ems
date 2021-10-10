@@ -23,13 +23,14 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
-                    <table id="datatable" class="table table-sm table-bordered table-striped">
+                    <table class="table table-sm table-bordered table-hover">
                         <thead>
                             <tr>
                                 @role('System Administrator')
                                 <th>ID</th>
                                 @endrole
                                 <th>Name</th>
+                                <th>Candidate to Elect</th>
                                 @role('System Administrator')
                                 <th class="text-center">Action</th>
                                 @endrole
@@ -37,12 +38,13 @@
                         </thead>
                         <tbody>
                             @foreach ($positions as $position)
-                            <tr @unlessrole('System Administrator') @can('positions.show') data-toggle="modal-ajax" data-target="#editPosition" data-href="{{ route('positions.show', $position->id) }}"  @endcan @else class="{{ $position->trashed() ? 'table-danger' : '' }}" @endunlessrole>
+                            <tr @unlessrole('System Administrator') @can('positions.show') data-toggle="modal-ajax" data-target="#showPosition" data-href="{{ route('positions.show', $position->id) }}"  @endcan @else class="{{ $position->trashed() ? 'table-danger' : '' }}" @endunlessrole>
                                 <td>{{ $position->id }}</td>
                                 <td>{{ $position->name }}</td>
+                                <td>{{ $position->candidate_to_elect }}</td>
                                 @role('System Administrator')
                                     <td class="text-center">
-                                        <a href="javascript:void(0)" data-toggle="modal-ajax" data-target="#showPosition" data-href="{{ route('positions.show',$position->id) }}"><i class="fad fa-file-position fa-lg"></i></a>
+                                        <a href="javascript:void(0)" data-toggle="modal-ajax" data-target="#showPosition" data-href="{{ route('positions.show',$position->id) }}"><i class="fad fa-file fa-lg"></i></a>
                                         {{-- <a href="javascript:void(0)" data-toggle="modal-ajax" data-target="#editPosition" data-href="{{ route('positions.edit',$position->id) }}"><i class="fad fa-edit fa-lg"></i></a> --}}
                                         @if ($position->trashed())
                                             <a class="text-success" href="javascript:void(0)" onclick="restoreFromTable(this)" data-href="{{ route('positions.restore', $position->id) }}"><i class="fad fa-download fa-lg"></i></a>

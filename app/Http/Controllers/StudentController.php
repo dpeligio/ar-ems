@@ -242,15 +242,13 @@ class StudentController extends Controller
 		}else{
 			$student->delete();
 		}
-		return back()->with('alert-danger','Deleted');
-		// return redirect()->route('users.index')->with('alert-danger','User successfully deleted');
+		return redirect()->route('students.index')->with('alert-danger','Deleted');
 	}
 
 	public function restore($student)
 	{
 		$student = Student::withTrashed()->find($student);
 		$student->restore();
-		return back()->with('alert-success','Restored');
-		// return redirect()->route('users.index')->with('alert-success','User successfully restored');
-	}
+		return redirect()->route('students.index')->with('alert-success','Restored');
+    }
 }

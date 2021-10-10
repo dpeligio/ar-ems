@@ -13,10 +13,19 @@ class PositionsTableSeeder extends Seeder
     public function run()
     {
         Position::insert([
-            ['name' => 'Chairman'],
-            ['name' => 'Vice-Chairman'],
-            ['name' => 'Treasurer'],
-            ['name' => 'Secretary']
+            ['name' => 'Chairman', 'candidate_to_elect' => 1],
+            ['name' => 'Vice-Chairman', 'candidate_to_elect' => 1],
+            ['name' => 'Treasurer', 'candidate_to_elect' => 1],
+            ['name' => 'Secretary', 'candidate_to_elect' => 1],
+            ['name' => 'Auditor', 'candidate_to_elect' => 1],
+            ['name' => 'PIO', 'candidate_to_elect' => 2],
+            ['name' => 'Peace Officer', 'candidate_to_elect' => 2],
+            /* ['name' => 'Grade 7 Representative', 'candidate_to_elect' => 1],
+            ['name' => 'Grade 8 Representative', 'candidate_to_elect' => 1],
+            ['name' => 'Grade 9 Representative', 'candidate_to_elect' => 1],
+            ['name' => 'Grade 10 Representative', 'candidate_to_elect' => 1],
+            ['name' => 'Grade 11 Representative', 'candidate_to_elect' => 1],
+            ['name' => 'Grade 12 Representative', 'candidate_to_elect' => 1] */
         ]);
     }
 }

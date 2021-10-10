@@ -156,7 +156,7 @@ class PermissionController extends Controller
 			$permission->delete();
 		}
 		return redirect()->route('roles.index')
-						->with('alert-danger','Permission successfully deleted');
+						->with('alert-danger','Deleted');
 	}
 
 	public function restore($permission)
@@ -164,6 +164,6 @@ class PermissionController extends Controller
 		$permission = Permission::withTrashed()->find($permission);
 		$permission->restore();
 		return redirect()->route('roles.index')
-						->with('alert-success','Permission successfully restored');
+						->with('alert-success','Restored');
 	}
 }

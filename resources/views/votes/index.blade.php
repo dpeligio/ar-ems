@@ -65,6 +65,43 @@
                         </tbody>
                     </table>
                 </div>
+                @role('System Administrator')
+                    @if(config('app.env') == 'local')
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-header">
+                                Insert Dummy Student
+                            </div>
+                            <div class="card-body">
+                                <form class="form-horizontal" action="{{ route('votes.random_votes') }}" method="post">
+                                    @csrf
+                                    <hr>
+                                    <div class="form-group">
+                                        <label>Election: </label>
+                                        <select class="form-control select2" name="election">
+                                            @foreach ($elections as $election)
+                                                <option value="{{ $election->id }}">
+                                                    {{ $election->title }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    {{-- <div class="form-group">
+                                        <div class="checkbox">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" name="add_account" value="add_account" id="addAccount">
+                                                <label class="custom-control-label" for="addAccount">Add User Account</label>
+                                            </div>
+                                        </div>
+                                    </div> --}}
+                                    <hr>
+                                    <button type="submit" class="btn btn-danger">Submit</button>					
+                                </form>
+                            </div>
+                        </div>
+                    </div>	
+                    @endif
+                @endrole
             </div>
         </div>
     </section>

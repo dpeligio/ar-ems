@@ -89,6 +89,8 @@ Route::group(array('middleware'=>['auth']), function() {
 	Route::resource('elections', 'ElectionController');
 	// restore
 	Route::get('elections/get_election_data/{election}', 'ElectionController@getElectionData')->name('votes.get_election_data');
+	Route::get('election_result', 'ElectionController@results')->name('elections.results');
+	// Route::post('elections/update_status/{election}', 'ElectionController@updateStatus')->name('elections.update_status');
 	Route::post('elections_restore/{election}', [
 		'as' => 'elections.restore',
 		'uses' => 'ElectionController@restore'
@@ -111,18 +113,22 @@ Route::group(array('middleware'=>['auth']), function() {
 	/**
 	 * Results
 	 */
-	Route::resource('results', 'ResultController');
+	/* Route::resource('results', 'ResultController');
 	// restore
 	Route::post('results_restore/{result}', [
 		'as' => 'results.restore',
 		'uses' => 'ResultController@restore'
-	]);
+	]); */
 
 	/**
 	 * Tasks
 	 */
 	Route::resource('tasks', 'TaskController');
 	// restore
+	Route::get('tasks_done/{task}', [
+		'as' => 'tasks.mark_as_done',
+		'uses' => 'TaskController@markAsDone'
+	]);
 	Route::post('tasks_restore/{task}', [
 		'as' => 'tasks.restore',
 		'uses' => 'TaskController@restore'
@@ -146,8 +152,10 @@ Route::group(array('middleware'=>['auth']), function() {
 
 	
 });
+Route::resource('officers', 'OfficerController')->only(['index']);
 /**	
  * Dev
  */
 Route::post('insert_student', ['as' => 'dummy_identity.insert_student', 'uses' => 'RandomIdentityController@insert_student']);
 Route::post('insert_faculty', ['as' => 'dummy_identity.insert_faculty', 'uses' => 'RandomIdentityController@insert_faculty']);
+Route::post('votes/random_votes', 'VoteController@randomVotes')->name('votes.random_votes');

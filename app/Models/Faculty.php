@@ -26,9 +26,9 @@ class Faculty extends Model
         return $this->hasOne('App\Models\UserFaculty', 'faculty_id');
     }
 
-    public static function getFacultyName($facultyID)
+    public static function getFacultyName()
 	{
-		$faculty = self::find($facultyID);
+		$faculty = self::find($this->id);
 		$name = "N/A";
 		if($faculty){
 			$name = $faculty->first_name.' '.
@@ -36,5 +36,50 @@ class Faculty extends Model
 				$faculty->last_name;
 		}
 		return $name;
-	}
+    }
+    
+    public function fullname($format)
+	{
+        $format = explode('-', $format);
+        $name = "";
+        for ($i=0; $i < count($format); $i++) { 
+            switch ($format[$i]) {
+                case 'f':
+                    if($i == 0)
+                        $name .= $this->first_name;
+                    elseif($i == 1)
+                        $name .= $this->first_name;
+                    break;
+                case 'm':
+                    if($i == 1){
+                        $name .= ' '.$this->middle_name[0].'. ';
+                    }else{
+                        $name .= ' '.$this->middle_name[0].'. ';
+                    }
+                    break;
+                case 'M':
+                    if($i == 1){
+                        $name .= ' '.$this->middle_name.' ';
+                    }elseif($i == 2){
+                        $name .= ' '.$this->middle_name;
+                    }
+                    break;
+                case 'l':
+                    if($i == 0){
+                        $name .= $this->last_name.', ';
+                    }elseif($i == 2){
+                        $name .= ' '.$this->last_name;
+                    }
+                    break;
+                
+                default:
+                $name = $this->first_name.' '.
+                    (is_null($this->middle_name) ? '' : $this->middle_name[0].'. ').
+                    $this->last_name;
+                    break;
+            }
+        }
+		
+		return $name;
+    }
 }

@@ -2,7 +2,7 @@
 	<div class="modal-dialog modal-lg modal-dialog-scrollable">
 		<div class="modal-content">
 			<div class="modal-header">
-	          <h4 class="modal-title">{{ $student_show->getStudentName($student_show->id) }}</h4>
+	          <h4 class="modal-title">{{ $student_show->getStudentName() }}</h4>
 	          <button type="button" class="close" data-dismiss="modal-ajax" aria-hidden="true">&times;</button>
 	    	</div>
 			<div class="modal-body">
@@ -26,6 +26,9 @@
                         <br>
                         <label>Gender: </label>
                         {{ $student_show->gender }}
+                        <br>
+                        <label>Birth Date: </label>
+                        {{ date('F d, Y', strtotime($student_show->birth_date)) }}
                         <br>
                         <label>Contact #: </label>
                         {{ $student_show->contact_number }}
