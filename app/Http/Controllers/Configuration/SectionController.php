@@ -60,12 +60,12 @@ class SectionController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-			'year_level' => 'required',
+			'grade_level' => 'required',
 			'name' => 'required',
 		]);
 
 		Section::create([
-			'year_level' => $request->get('year_level'),
+			'grade_level' => $request->get('grade_level'),
 			'name' => $request->get('name')
         ]);
         
@@ -81,7 +81,7 @@ class SectionController extends Controller
     public function show(Section $section)
     {
         $data = ([
-			'section_show' => $section,
+			'section' => $section,
 		]);
 		/* if(!Auth::user()->hasrole('System Administrator')){
 			$data = ([
@@ -120,12 +120,12 @@ class SectionController extends Controller
     public function update(Request $request, Section $section)
     {
         $request->validate([
-			'year_level' => 'required',
+			'grade_level' => 'required',
 			'name' => 'required',
 		]);
 
 		$section->update([
-			'year_level' => $request->get('year_level'),
+			'grade_level' => $request->get('grade_level'),
 			'name' => $request->get('name')
         ]);
 

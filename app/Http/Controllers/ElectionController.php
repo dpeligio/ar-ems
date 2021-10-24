@@ -256,42 +256,44 @@ class ElectionController extends Controller
 
     public function results()
     {
-        $recentElectionChart = [];
-        $recentElection = Election::where('status', 'ended')->orderBy('end_date','DESC')->first();
-        if(isset($recentElection->id)){
-            foreach ($recentElection->candidates->groupBy('position_id') as $position => $candidates) {
-                $recentElectionChart[$position] = new OngoingElectionChart;
-                $recentElectionChart[$position]->height(250);
-                $labels = [];
-                $votes = [];
-                foreach ($candidates as $candidate) {
-                    $labels[] = $candidate->student->getStudentName($candidate->student_id);
-                    $votes[] = $candidate->votes->count();
+        $electionChart = [[]];
+        $elections = Election::where('status', 'ended')->orderBy('end_date','DESC')->get();
+        foreach($elections as $election){
+            if(isset($election->id)){
+                foreach ($election->candidates->groupBy('position_id') as $position => $candidates) {
+                    $electionChart[$election->id][$position] = new OngoingElectionChart;
+                    $electionChart[$election->id][$position]->height(250);
+                    $labels = [];
+                    $votes = [];
+                    foreach ($candidates as $candidate) {
+                        $labels[] = $candidate->student->getStudentName($candidate->student_id);
+                        $votes[] = $candidate->votes->count();
+                    }
+                    $electionChart[$election->id][$position]->labels($labels);
+                    $electionChart[$election->id][$position]->dataset('votes', 'bar', $votes)->backgroundColor('#007bff')->color('#007bff');
+                    $electionChart[$election->id][$position]->options([
+                        'scales' => [
+                            'yAxes' => [[
+                                'ticks' => [
+                                    'stepSize' => 1,
+                                    // 'max' => 5,
+                                    // 'max' => 0
+                                ]
+                            ]],
+                            'xAxes' => [[
+                                'gridLines' => [
+                                    'display' => true
+                                ]
+                            ]]
+                        ]
+                    ]);
                 }
-                $recentElectionChart[$position]->labels($labels);
-                $recentElectionChart[$position]->dataset('votes', 'bar', $votes)->backgroundColor('#007bff')->color('#007bff');
-                $recentElectionChart[$position]->options([
-                    'scales' => [
-                        'yAxes' => [[
-                            'ticks' => [
-                                'stepSize' => 1,
-                                // 'max' => 5,
-                                // 'max' => 0
-                            ]
-                        ]],
-                        'xAxes' => [[
-                            'gridLines' => [
-                                'display' => true
-                            ]
-                        ]]
-                    ]
-                ]);
             }
         }
 
         $data = [
-            'recentElectionChart' => $recentElectionChart,
-            'recentElection' => $recentElection,
+            'electionChart' => $electionChart,
+            'elections' => $elections,
         ];
 
         return view('elections.results', $data);

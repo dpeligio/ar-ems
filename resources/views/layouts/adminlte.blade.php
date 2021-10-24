@@ -17,9 +17,10 @@
             $(function(){
                 @php
                     $url = explode('/', url()->current());
-                    $base_url = $url[0].'//'.$url[2].'/'.($url[3] ?? '');
+                    $base_url = $url[0].'//'.$url[2].'/'.($url[3] ?? '').(isset($url[4]) ? '/'.$url[4] : '');
                 @endphp
                 var url = '{{ $base_url }}';
+                var controller = '{{ $url[3] }}';
                 // for sidebar menu but not for treeview submenu
                 $('ul.nav-sidebar li a').filter(function() {
                     if(url == $(this).attr('href')){
@@ -276,11 +277,11 @@
             <!-- /.control-sidebar -->
             <!-- Main Footer -->
             <footer class="main-footer">
-                <strong>Copyright &copy; 2014-2021 <a href="/">{{ config('app.name') }}</a>.</strong>
+                <strong>Copyright &copy; {{ date('Y') }} <a href="/">{{ config('app.name') }}</a>.</strong>
                 All rights reserved.
-                <div class="float-right d-none d-sm-inline-block">
-                    <b>Version</b> 3.1.0
-                </div>
+                {{-- <div class="float-right d-none d-sm-inline-block">
+                    <b>Version</b> 1
+                </div> --}}
             </footer>
         </div>
         <!-- ./wrapper -->

@@ -4,6 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Election;
+use App\Models\Student;
+use App\Models\Faculty;
+use App\Models\Task;
+use App\Models\Votes;
+use App\Models\User;
 use App\Models\Configuration\Position;
 use App\Charts\OngoingElectionChart;
 
@@ -26,6 +31,12 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $students = Student::get()->count();
+        $faculties = Faculty::get()->count();
+        $taskDone = Task::where('is_done', 1)->get()->count();
+        $tasks = Task::get()->count();
+        $users = User::get()->count();
+
         $ongoingElectionChart = [];
         $ongoingElection = Election::where('status', 'ongoing')->orderBy('start_date','DESC')->first();
         if(isset($ongoingElection->id)){
@@ -62,6 +73,11 @@ class HomeController extends Controller
         $data = [
             'ongoingElectionChart' => $ongoingElectionChart,
             'ongoingElection' => $ongoingElection,
+            'taskDone' => $taskDone,
+            'tasks' => $tasks,
+            'faculties' => $faculties,
+            'students' => $students,
+            'users' => $users,
         ];
 
         return view('dashboard', $data);

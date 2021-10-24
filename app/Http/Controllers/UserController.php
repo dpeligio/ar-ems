@@ -116,7 +116,14 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        //
+        if(request()->ajax()) {
+            $data = [
+                'user' => $user
+            ];
+            return response()->json([
+                'modal_content' => view('users.show', $data)->render()
+            ]);
+        }
     }
 
     /**

@@ -12,12 +12,16 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+	return redirect()->route('pages.vission_mission');
 });
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/dashboard', 'HomeController@index')->name('dashboard');
+Route::get('/pages/vission_mission', 'PageController@vissionMission')->name('pages.vission_mission');
+Route::get('/pages/achievements', 'PageController@achievements')->name('pages.achievements');
+Route::get('/pages/officers', 'PageController@officers')->name('pages.officers');
+
 
 Route::group(array('middleware'=>['auth']), function() {
 
@@ -111,16 +115,6 @@ Route::group(array('middleware'=>['auth']), function() {
 	]);
 
 	/**
-	 * Results
-	 */
-	/* Route::resource('results', 'ResultController');
-	// restore
-	Route::post('results_restore/{result}', [
-		'as' => 'results.restore',
-		'uses' => 'ResultController@restore'
-	]); */
-
-	/**
 	 * Tasks
 	 */
 	Route::resource('tasks', 'TaskController');
@@ -132,6 +126,20 @@ Route::group(array('middleware'=>['auth']), function() {
 	Route::post('tasks_restore/{task}', [
 		'as' => 'tasks.restore',
 		'uses' => 'TaskController@restore'
+	]);
+
+	/**
+	 * Achievements
+	 */
+	Route::resource('achievements', 'AchievementController');
+	Route::get('achievements_page', [
+		'as' => 'achievements.page',
+		'uses' => 'AchievementController@page'
+	]);
+	// restore
+	Route::post('achievements_restore/{achievement}', [
+		'as' => 'achievements.restore',
+		'uses' => 'AchievementController@restore'
 	]);
 
     
@@ -152,7 +160,6 @@ Route::group(array('middleware'=>['auth']), function() {
 
 	
 });
-Route::resource('officers', 'OfficerController')->only(['index']);
 /**	
  * Dev
  */

@@ -9,10 +9,14 @@
             </div>
             <div class="modal-body" id="electionData">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <div class="form-group">
                             <label class="mb-0">Election:</label><br>
                             {{ $vote->election->title }}
+                        </div>
+                        <div class="form-group">
+                            <label class="mb-0">Description:</label><br>
+                            {{ $vote->election->description }}
                         </div>
                         <div class="form-group">
                             <label class="mb-0">Election Date:</label><br>

@@ -12,7 +12,7 @@
                         {{ $student_show->student_id }}
                         <br>
                         <label>Year/Section: </label>
-                        {{ $student_show->section->section->year_level }}
+                        {{ $student_show->section->section->grade_level }}
                         {{ $student_show->section->section->name }}
                         <br>
                         <label>First Name: </label>

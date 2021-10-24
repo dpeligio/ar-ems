@@ -105,7 +105,7 @@
             url: href,
             data: data,
             success: function(data){
-                $('.modal-backdrop').remove()
+                // $('.modal-backdrop').remove()
                 $('#modalAjax').html(data.modal_content)
                 $('.select2').select2({
                     theme: "bootstrap4",

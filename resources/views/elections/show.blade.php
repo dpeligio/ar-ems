@@ -8,20 +8,25 @@
 			<div class="modal-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <label>Title: </label>
-                        {{ $election_show->title }}
-                        <br>
-                        <label>Description: </label>
-                        {{ $election_show->description }}
-                        <br>
-                        <label>Election Date: </label>
-                        {{ date('F d, Y h:i A', strtotime($election_show->start_date)) }}
-                        -
-                        {{ date('F d, Y h:i A', strtotime($election_show->end_date)) }}
+                        <div class="form-group">
+                            <label>Title: </label><br>
+                            {{ $election_show->title }}
+                        </div>
+                        <div class="form-group">
+                            <label>Description: </label><br>
+                            {{ $election_show->description }}
+                        </div>
+                        <div class="form-group">
+                            <label>Election Date: </label><br>
+                            {{ date('F d, Y h:i A', strtotime($election_show->start_date)) }}
+                            -
+                            {{ date('F d, Y h:i A', strtotime($election_show->end_date)) }}
+                        </div>
                     </div>
                 </div>
                 <hr>
                 <div class="row">
+                    <legend>Candidates:</legend>
                     @foreach ($election_show->candidates->groupBy('position_id') as $position => $candidates)
                     <div class="col-md-6">
                         <label>{{ App\Models\Configuration\Position::find($position)->name }}</label><br>

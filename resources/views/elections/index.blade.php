@@ -44,13 +44,6 @@
                             <td>{{ $election->id }}</td>
                             @endrole
                             <td>
-                               {{--  @if($election->start_date->gt(Carbon\Carbon::now()))
-                                Incoming
-                                @elseif($election->start_date->lt(Carbon\Carbon::now()) && $election->end_date->gt(Carbon\Carbon::now()))
-                                Ongoing
-                                @elseif($election->end_date->lt(Carbon\Carbon::now()))
-                                Ended
-                                @endif --}}
                                 {{ $election->status }}
                             </td>
                             <td>{{ $election->title }}</td>

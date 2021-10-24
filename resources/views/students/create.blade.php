@@ -17,12 +17,12 @@
                                 <input class="form-control" type="text" name="student_id" required>
                             </div>
                             <div class="form-group">
-                                <label>Year/Section:</label><br>
-                                <select class="form-control select2" name="section" required>
+                                <label>Grade/Section:</label><br>
+                                <select class="form-control select2" name="asd">
                                     <option></option>
                                     @foreach ($sections as $section)
                                         <option value="{{ $section->id }}" @if(old('section') == $section->id) selected @endif>
-                                            {{ $section->year_level }}
+                                            {{ $section->grade_level }}
                                             {{ $section->name }}
                                         </option>
                                     @endforeach

@@ -146,47 +146,49 @@ class Student extends Model
     {
         $latestElection = Election::where('status', 'ended')->orderBy('end_date','DESC')->first();
         $candidatesID = [];
-        foreach(Position::get() as $position)
-        {
-            if($position->candidate_to_elect > 1)
+        if(isset($latestElection->id)){
+            foreach(Position::get() as $position)
             {
-                $candidates = Candidate::where([
-                    ['election_id', $latestElection->id],
-                    ['position_id', $position->id],
-                ]);
-                $highestVote = 0;
-                $finalElected = [];
-                for ($i=0; $i < $position->candidate_to_elect; $i++) 
+                if($position->candidate_to_elect > 1)
                 {
+                    $candidates = Candidate::where([
+                        ['election_id', $latestElection->id],
+                        ['position_id', $position->id],
+                    ]);
+                    $highestVote = 0;
+                    $finalElected = [];
+                    for ($i=0; $i < $position->candidate_to_elect; $i++) 
+                    {
+                        $highestVote = 0;
+                        $electedID = 0;
+                        foreach($candidates->whereNotIn('id', $finalElected)->get() as $candidate)
+                        {
+                            if($candidate->votes->count() > $highestVote) {
+                                $highestVote= $candidate->votes->count();
+                                $electedID = $candidate->id;
+                            }
+                        }
+                        $finalElected[] = $electedID;
+                        $candidatesID[] = $electedID;
+                    }
+                }
+                else
+                {
+                    $candidates = Candidate::where([
+                        ['election_id', $latestElection->id],
+                        ['position_id', $position->id],
+                    ])->get();
                     $highestVote = 0;
                     $electedID = 0;
-                    foreach($candidates->whereNotIn('id', $finalElected)->get() as $candidate)
+                    foreach($candidates as $candidate)
                     {
                         if($candidate->votes->count() > $highestVote) {
-                            $highestVote= $candidate->votes->count();
                             $electedID = $candidate->id;
+                            $highestVote = $candidate->votes->count();
                         }
                     }
-                    $finalElected[] = $electedID;
                     $candidatesID[] = $electedID;
                 }
-            }
-            else
-            {
-                $candidates = Candidate::where([
-                    ['election_id', $latestElection->id],
-                    ['position_id', $position->id],
-                ])->get();
-                $highestVote = 0;
-                $electedID = 0;
-                foreach($candidates as $candidate)
-                {
-                    if($candidate->votes->count() > $highestVote) {
-                        $electedID = $candidate->id;
-                        $highestVote = $candidate->votes->count();
-                    }
-                }
-                $candidatesID[] = $electedID;
             }
         }
         return Candidate::whereIn('id', $candidatesID)->get();

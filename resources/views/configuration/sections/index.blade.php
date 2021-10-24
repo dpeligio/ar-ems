@@ -42,7 +42,7 @@
                                 @role('System Administrator')
                                 <td>{{ $section->id }}</td>
                                 @endrole
-                                <td>{{ $section->year_level }}</td>
+                                <td>{{ $section->grade_level }}</td>
                                 <td>{{ $section->name }}</td>
                                 @role('System Administrator')
                                     <td class="text-center">

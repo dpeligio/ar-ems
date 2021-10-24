@@ -1,23 +1,18 @@
 @extends('layouts.adminlte')
 @section('content')
-<!-- Content Header (Page header) -->
 <div class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
                 <h1 class="m-0">Votes</h1>
             </div>
-            <!-- /.col -->
             <div class="col-sm-6 text-right">
                 @can('votes.create')
                     <button class="btn btn-default" type="button" data-toggle="modal-ajax" data-href="{{ route('votes.create') }}" data-target="#createVote"><i class="fa fa-plus"></i> Add</button>
                 @endcan
             </div>
-            <!-- /.col -->
         </div>
-        <!-- /.row -->
     </div>
-    <!-- /.container-fluid -->
     <section class="content">
         <div class="container-fluid">
             <div class="row">
@@ -28,6 +23,7 @@
                                 @role('System Administrator')
                                 <th>ID</th>
                                 @endrole
+                                <th>Election</th>
                                 <th>Vote Number</th>
                                 <th>Name</th>
                                 @role('System Administrator')
@@ -41,6 +37,7 @@
                                 @role('System Administrator')
                                 <td>{{ $vote->id }}</td>
                                 @endrole
+                                <td>{{ $vote->election->title }}</td>
                                 <td>{{ $vote->vote_number }}</td>
                                 <td>
                                     @if($vote->user->student)
@@ -52,7 +49,6 @@
                                 @role('System Administrator')
                                     <td class="text-center">
                                         <a href="javascript:void(0)" data-toggle="modal-ajax" data-target="#showVote" data-href="{{ route('votes.show',$vote->id) }}"><i class="fad fa-file fa-lg"></i></a>
-                                        {{-- <a href="javascript:void(0)" data-toggle="modal-ajax" data-target="#editVote" data-href="{{ route('votes.edit',$vote->id) }}"><i class="fad fa-edit fa-lg"></i></a> --}}
                                         @if ($vote->trashed())
                                             <a class="text-success" href="javascript:void(0)" onclick="restoreFromTable(this)" data-href="{{ route('votes.restore', $vote->id) }}"><i class="fad fa-download fa-lg"></i></a>
                                         @else
@@ -70,7 +66,7 @@
                     <div class="col-md-3">
                         <div class="card">
                             <div class="card-header">
-                                Insert Dummy Student
+                                Random Vote
                             </div>
                             <div class="card-body">
                                 <form class="form-horizontal" action="{{ route('votes.random_votes') }}" method="post">
@@ -79,6 +75,7 @@
                                     <div class="form-group">
                                         <label>Election: </label>
                                         <select class="form-control select2" name="election">
+                                            <option></option>
                                             @foreach ($elections as $election)
                                                 <option value="{{ $election->id }}">
                                                     {{ $election->title }}
@@ -86,14 +83,6 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    {{-- <div class="form-group">
-                                        <div class="checkbox">
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" name="add_account" value="add_account" id="addAccount">
-                                                <label class="custom-control-label" for="addAccount">Add User Account</label>
-                                            </div>
-                                        </div>
-                                    </div> --}}
                                     <hr>
                                     <button type="submit" class="btn btn-danger">Submit</button>					
                                 </form>

@@ -15,8 +15,8 @@ class CreateSectionsTable extends Migration
     {
         Schema::create('sections', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('year_level');
-            $table->enum('stage', ['secondary', 'tertiary']);
+            $table->enum('grade_level', [7, 8, 9, 10, 11, 12]);
+            // $table->enum('stage', ['secondary', 'tertiary']);
             $table->string('name');
             $table->unsignedBigInteger('created_by')->nullable();
 			$table->unsignedBigInteger('updated_by')->nullable();

@@ -23,7 +23,7 @@
                                     <option></option>
                                     @foreach ($sections as $section)
                                         <option value="{{ $section->id }}" @if($student_edit->section->section_id == $section->id) selected @endif>
-                                            {{ $section->year_level }}
+                                            {{ $section->grade_level }}
                                             {{ $section->name }}
                                         </option>
                                     @endforeach

@@ -15,10 +15,18 @@
                         <div class="col">
                             <div class="form-group">
 						        <label for="name">Year Level:</label>
-						        <input id="name" type="text" class="form-control{{ $errors->has('year_level') ? ' is-invalid' : '' }}" name="year_level" value="{{ old('year_level') ?? $section->year_level }}">
-						        @if ($errors->has('year_level'))
+						        {{-- <input id="name" type="text" class="form-control{{ $errors->has('grade_level') ? ' is-invalid' : '' }}" name="grade_level" value="{{ old('grade_level') ?? $section->grade_level }}"> --}}
+                                <select name="grade_level" class="form-control{{ $errors->has('grade_level') ? ' is-invalid' : '' }} select2">
+                                    <option value="7" @if($section->grade_level == 7) selected @endif>Grade 7</option>
+                                    <option value="8" @if($section->grade_level == 8) selected @endif>Grade 8</option>
+                                    <option value="9" @if($section->grade_level == 9) selected @endif>Grade 9</option>
+                                    <option value="10" @if($section->grade_level == 10) selected @endif>Grade 10</option>
+                                    <option value="11" @if($section->grade_level == 11) selected @endif>Grade 11</option>
+                                    <option value="12" @if($section->grade_level == 12) selected @endif>Grade 12</option>
+                                </select>
+                                @if ($errors->has('grade_level'))
 						            <span class="invalid-feedback" role="alert">
-						                <strong>{{ $errors->first('year_level') }}</strong>
+						                <strong>{{ $errors->first('grade_level') }}</strong>
 						            </span>
 						        @endif
                             </div>

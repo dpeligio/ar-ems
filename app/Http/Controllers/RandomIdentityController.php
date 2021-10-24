@@ -41,7 +41,7 @@ class RandomIdentityController extends Controller
 				'address' => ($brgy == '' ? '' : $brgy . ', ') . $city . ', ' . $province
 			]);
 			
-			$section = Section::where('stage', $request->get('stage'))->inRandomOrder()->first();
+			$section = Section::inRandomOrder()->first();
 			StudentSection::create([
 				'student_id' => $student->id,
 				'section_id' => $section->id

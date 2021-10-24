@@ -21,7 +21,7 @@
                 @if(Auth::user()->isOfficer())
                 <div class="row">
                     <div class="col-md-8">
-                        <table class="table table-sm table-bordered table-hover">
+                        <table id="datatable" class="table table-sm table-bordered table-hover">
                             <thead>
                                 <tr>
                                     <th style="width: 50px"></th>
@@ -54,7 +54,7 @@
                     </div>
                 </div>
                 @else
-                <table id="datatable" class="table table-sm table-bordered table-striped">
+                <table id="datatable" class="table table-sm table-bordered table-hover">
                     <thead>
                         <tr>
                             @role('System Administrator')

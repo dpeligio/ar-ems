@@ -14,7 +14,7 @@ class Section extends Model
     protected $table = 'sections';
 
     protected $fillable = [
-        'year_level',
+        'grade_level',
         'name'
     ];
 
@@ -23,16 +23,16 @@ class Section extends Model
         return $this->hasMany('App\Models\StudentSection', 'section_id');
     }
 
-    public function getYearSection()
+    /* public function getYearSection()
     {
         $year = "";
         $section = "";
         if(isset($this->id)){
             if($this->stage == 'secondary'){
-                $year = "Grade " . ($this->year_level + 6);
+                $year = "Grade " . ($this->grade_level + 6);
             }
             elseif($this->stage == 'tertiary'){
-                $year = $this->ordinal($this->year_level)." Year";
+                $year = $this->ordinal($this->grade_level)." Year";
             }
             $section = $this->name;
         }
@@ -45,5 +45,5 @@ class Section extends Model
             return $number. 'th';
         else
             return $number. $ends[$number % 10];
-    }
+    } */
 }

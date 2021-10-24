@@ -55,9 +55,10 @@
                                 </td>
                                 <td>{{ $student->student_id }}</td>
                                 <td>
-                                    {{ isset($student->section) ? $student->section->section->getYearSection() : "" }}
-                                    {{-- {{ $student->section->section->year_level ?? "" }}
-                                    {{ $student->section->section->name ?? "" }} --}}
+                                    Grade
+                                    {{ $student->section->section->grade_level ?? "" }}
+                                    |
+                                    {{ $student->section->section->name ?? "" }}
                                 </td>
                                 <td>{{ $student->fullname('l-f-M') }}</td>
                                 <td>{{ $student->middle_name }}</td>

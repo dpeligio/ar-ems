@@ -1,7 +1,7 @@
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar elevation-4 sidebar-light-success">
     <!-- Brand Logo -->
-    <a href="{{ route('home') }}" class="brand-link text-sm">
+    <a href="@auth{{ route('dashboard') }}@else{{ route('pages.vission_mission') }}@endauth" class="brand-link text-sm">
         <img src="{{ asset('images/logo.png') }}" alt="BSF" class="brand-image img-circle elevation-3" style="opacity: .8">
         <span class="brand-text font-weight-light">BSF SSG Management</span>
     </a>
@@ -44,11 +44,9 @@
         <!-- Sidebar Menu -->
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column nav-flat" data-widget="treeview" role="menu" data-accordion="false">
-                <!-- Add icons to the links using the .nav-icon class
-                    with font-awesome or any other icon font library -->
                 @guest
                     <li class="nav-item">
-                        <a href="{{ url('/') }}" class="nav-link">
+                        <a href="{{ route('pages.vission_mission') }}" class="nav-link">
                             <i class="nav-icon fas fa-dot-circle"></i>
                             <p>
                                 Vission/Mission
@@ -56,7 +54,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('home') }}" class="nav-link">
+                        <a href="{{ route('pages.achievements') }}" class="nav-link">
                             <i class="nav-icon fas fa-trophy"></i>
                             <p>
                                 Achievements
@@ -64,18 +62,10 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('officers.index') }}" class="nav-link">
+                        <a href="{{ route('pages.officers') }}" class="nav-link">
                             <i class="nav-icon fas fa-users"></i>
                             <p>
                                 Officers
-                            </p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ route('login') }}" class="nav-link">
-                            <i class="nav-icon fas fa-poll"></i>
-                            <p>
-                                Vote
                             </p>
                         </a>
                     </li>
@@ -90,7 +80,7 @@
                 @endguest
                 @auth
                     <li class="nav-item">
-                        <a href="{{ route('home') }}" class="nav-link">
+                        <a href="{{ route('dashboard') }}" class="nav-link">
                             <i class="nav-icon fas fa-tachometer-alt"></i>
                             <p>
                                 Dashboard
@@ -98,13 +88,23 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('officers.index') }}" class="nav-link">
+                        <a href="{{ route('pages.officers') }}" class="nav-link">
                             <i class="nav-icon fas fa-users"></i>
                             <p>
                                 Officers
                             </p>
                         </a>
                     </li>
+                    @can('achievements.index')
+                    <li class="nav-item">
+                        <a href="{{ route('achievements.index') }}" class="nav-link">
+                            <i class="nav-icon fas fa-trophy"></i>
+                            <p>
+                                Achievements
+                            </p>
+                        </a>
+                    </li>
+                    @endcan
                     @can('elections.index')
                     <li class="nav-item">
                         <a href="{{ route('elections.index') }}" class="nav-link">
