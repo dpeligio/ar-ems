@@ -8,6 +8,7 @@ use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Wildside\Userstamps\Userstamps;
+use App\Models\Announcement;
 
 class User extends Authenticatable
 {
@@ -22,6 +23,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
+        'image',
         'username',
         'email',
         'password',
@@ -66,6 +68,28 @@ class User extends Authenticatable
             }
         }
         return False;
+    }
+
+    public function seen_announcements()
+    {
+        return $this->hasMany('App\Models\UserAnnouncement', 'user_id');
+    }
+
+    public function new_announcements()
+    {
+        $seen_announcements = $this->seen_announcements()->get('id');
+        return Announcement::whereNotIn('id', $seen_announcements)->get();
+    }
+
+    public function avatar()
+    {
+        $avatar = "";
+        if(is_null($this->image)){
+            $avatar = "images/user/default/male.jpg";
+        }else{
+            $avatar = "images/user/".$this->image;
+        }
+        return $avatar;
     }
 
 }

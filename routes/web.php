@@ -142,6 +142,26 @@ Route::group(array('middleware'=>['auth']), function() {
 		'uses' => 'AchievementController@restore'
 	]);
 
+	/**
+	 * Announcements
+	 */
+	Route::resource('announcements', 'AnnouncementController');
+	/* Route::get('announcements_page', [
+		'as' => 'announcements.page',
+		'uses' => 'AnnouncementController@page'
+	]); */
+	/* Route::get('announcements_notification', [
+		'as' => 'announcements.notification',
+		'uses' => 'AnnouncementController@notification'
+	]); */
+	
+	// restore
+	Route::post('announcements_restore/{announcement}', [
+		'as' => 'announcements.restore',
+		'uses' => 'AnnouncementController@restore'
+	]);
+
+
     
     /**
 	 * Users
@@ -153,6 +173,8 @@ Route::group(array('middleware'=>['auth']), function() {
 		'uses' => 'UserController@sidebar_collapse'
 	]); */
 	// restore
+	Route::get('account/{user}', 'UserController@account')->name('account.index');
+	Route::put('account_update/{user}', 'UserController@updateAccount')->name('account.update');
 	Route::post('users_restore/{user}', [
 		'as' => 'users.restore',
 		'uses' => 'UserController@restore'
@@ -163,6 +185,10 @@ Route::group(array('middleware'=>['auth']), function() {
 /**	
  * Dev
  */
+Route::get('announcements_notification', [
+	'as' => 'announcements.notification',
+	'uses' => 'AnnouncementController@notification'
+]);
 Route::post('insert_student', ['as' => 'dummy_identity.insert_student', 'uses' => 'RandomIdentityController@insert_student']);
 Route::post('insert_faculty', ['as' => 'dummy_identity.insert_faculty', 'uses' => 'RandomIdentityController@insert_faculty']);
 Route::post('votes/random_votes', 'VoteController@randomVotes')->name('votes.random_votes');

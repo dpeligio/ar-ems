@@ -10,9 +10,9 @@
         <!-- Sidebar user panel (optional) -->
         @auth
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-            {{-- <div class="image">
-                <img src="{{ asset('AdminLTE-3.1.0/dist/img/user2-160x160.jpg') }}" class="img-circle elevation-2" alt="User Image">
-            </div> --}}
+            <div class="image">
+                <img src="{{ asset(Auth::user()->avatar()) }}" class="img-circle elevation-2" alt="User Image">
+            </div>
             <div class="info">
                 <a href="#" class="d-block">
                     @if (Auth::user()->student)
@@ -30,18 +30,6 @@
             </div>
         </div>
         @endauth
-        <!-- SidebarSearch Form -->
-        {{-- <div class="form-inline">
-            <div class="input-group" data-widget="sidebar-search">
-                <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
-                <div class="input-group-append">
-                    <button class="btn btn-sidebar">
-                    <i class="fas fa-search fa-fw"></i>
-                    </button>
-                </div>
-            </div>
-        </div> --}}
-        <!-- Sidebar Menu -->
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column nav-flat" data-widget="treeview" role="menu" data-accordion="false">
                 @guest
@@ -105,6 +93,16 @@
                         </a>
                     </li>
                     @endcan
+                    @can('announcements.index')
+                    <li class="nav-item">
+                        <a href="{{ route('announcements.index') }}" class="nav-link">
+                            <i class="nav-icon fas fa-bullhorn"></i>
+                            <p>
+                                Announcements
+                            </p>
+                        </a>
+                    </li>
+                    @endcan
                     @can('elections.index')
                     <li class="nav-item">
                         <a href="{{ route('elections.index') }}" class="nav-link">
@@ -136,6 +134,7 @@
                     </li>
                     @endcan
                     @can('tasks.index')
+                    @if(Auth::user()->hasrole('System Administrator') || Auth::user()->isOfficer())
                     <li class="nav-item">
                         <a href="{{ route('tasks.index') }}" class="nav-link">
                             <i class="nav-icon fas fa-list"></i>
@@ -144,6 +143,7 @@
                             </p>
                         </a>
                     </li>
+                    @endif
                     @endcan
                     @can('students.index')
                     <li class="nav-item">
@@ -217,7 +217,7 @@
                         </ul>
                     </li>
                     @endcanany
-                    <li class="nav-item">
+                    {{-- <li class="nav-item">
                         <a class="nav-link" href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">
                             <i class="nav-icon fas fa-sign-out"></i>
                             <p>
@@ -227,7 +227,7 @@
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                             @csrf
                         </form>
-                    </li>
+                    </li> --}}
                 @endauth
             </ul>
         </nav>

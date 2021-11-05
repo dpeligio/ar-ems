@@ -11,6 +11,7 @@ use App\Models\UserFaculty;
 use App\Models\UserStudent;
 use Carbon\Carbon;
 use Auth;
+use Image;
 
 class UserController extends Controller
 {
@@ -134,7 +135,27 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        //
+        
+        if(request()->ajax()){
+            $roles = Role::select('*');
+		
+            if(Auth::user()->hasrole('System Administrator')){
+                $roles = $roles;
+                $user->withTrashed();
+                // $employees->withTrashed();
+            }elseif(Auth::user()->hasrole('Administrator')){
+                $roles->where('id', '!=', 1)->get();
+            }else{
+                $roles->whereNotIn('id', [1,2]);
+            }
+            $data = [
+                'user' => $user,
+                'roles' => $roles->get()
+            ];
+            return response()->json([
+                'modal_content' => view('users.edit', $data)->render()
+            ]);
+        }
     }
 
     /**
@@ -146,7 +167,36 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        //
+        // $user = User::find($user);
+
+		$request->validate([
+			'role' => ['required'],
+			'username' => ['required', 'string', 'max:255', 'unique:users,username,'.$user->id],
+		]);
+		if($request->filled('password')){
+			$request->validate([
+				'password' => ['string', 'min:8', 'confirmed']
+			]);
+			$data = ([
+				'username' => $request->get('username'),
+				'email' => $request->get('email'),
+				'password' => Hash::make($request->get('password')),
+			]);
+		}else{
+			$data = ([
+				'name' => $request->get('username'),
+				'email' => $request->get('email'),
+			]);
+		}
+		$user->update($data);
+		
+		// $user->timestamps = false;
+		UserRole::where('model_id', $user->id)->update([
+			'role_id' => $request->get('role'),
+		]);
+		// $user->assignRole($request->role);
+		// return redirect()->route('users.index')->with('alert-success', 'User successfully updated');
+		return redirect()->route('users.index')->with('alert-success', 'Saved');
     }
 
     /**
@@ -172,5 +222,58 @@ class UserController extends Controller
 		$user->restore();
 		return back()->with('alert-success','Restored');
 		// return redirect()->route('users.index')->with('alert-success','User successfully restored');
-	}
+    }
+    
+    public function account(User $user)
+    {
+        $data = [
+            'user' => $user
+        ];
+        return view('users.account', $data);
+    }
+
+    public function updateAccount(Request $request, User $user)
+    {
+        $this->updateProfileImage($request, $user);
+        if(!is_null($request->get('old_password'))){
+            if(Hash::check($request->get('old_password'), $user->password)){
+                $request->validate([
+                    'old_password' => 'required',
+                    'new_password' => 'required|confirmed|min:8|different:old_password'
+                ]);
+                $user->update([
+                    'password' => Hash::make($request->get('new_password'))
+                ]);
+                return redirect()->route('account.index', $user->id)->with('alert-success', 'Password Changed');
+            }else{
+                return redirect()->route('account.index', $user->id)->with('alert-warning', 'Old Password is incorrect');
+            }
+        }
+        else{
+            return redirect()->route('account.index', $user->id)->with('alert-success', 'Saved');
+        }
+    }
+
+    public function updateProfileImage($request ,$user)
+    {
+        if($request->file('image')){
+            $avatar= $request->file('image');
+            $thumbnailImage = Image::make($avatar);
+
+            $storagePath = 'images/user';
+            $fileName = $user->id . '_' . date('m-d-Y H.i.s') . '.' . $avatar->getClientOriginalExtension();
+            $myimage = $thumbnailImage->fit(500);
+            // Storage::disk('upload')->putFileAs('images/rooms', $request->file('image'), $fileName);
+            $myimage->save($storagePath . '/' .$fileName);
+            $user->update([
+                'image' => $fileName
+            ]);
+            /* $file = $request->file('image');
+            $fileName = $request->get('name') . '_' . date('m-d-Y H.i.s') . '.' . $file->getClientOriginalExtension();
+            Storage::disk('upload')->putFileAs('images/rooms', $request->file('image'), $fileName);
+            $user->update([
+                'image' => $fileName
+            ]); */
+        }
+    }
 }

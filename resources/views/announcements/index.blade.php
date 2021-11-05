@@ -8,13 +8,13 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1 class="m-0">Achievements</h1>
+                <h1 class="m-0">Announcements</h1>
             </div>
             <!-- /.col -->
             <div class="col-sm-6 text-right">
-                @can('achievements.create')
-                    {{-- <button class="btn btn-default" type="button" data-toggle="modal-ajax" data-href="{{ route('achievements.create') }}" data-target="#createAchievement"><i class="fa fa-plus"></i> Add</button> --}}
-                    <a class="btn btn-default" href="{{ route('achievements.create') }}"><i class="fa fa-plus"></i> Add</a>
+                @can('announcements.create')
+                    {{-- <button class="btn btn-default" type="button" data-toggle="modal-ajax" data-href="{{ route('announcements.create') }}" data-target="#createAnnouncement"><i class="fa fa-plus"></i> Add</button> --}}
+                    <a class="btn btn-default" href="{{ route('announcements.create') }}"><i class="fa fa-plus"></i> Add</a>
                 @endcan
             </div>
             <!-- /.col -->
@@ -26,15 +26,15 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col" id="accordion">
-                @forelse ($achievements as $achievement)
-                    <div class="card @if($achievement->trashed()) card-danger @else card-success @endif card-outline">
-                        <a class="d-block" data-toggle="collapse" href="#achievement-{{ $achievement->id }}">
+                @forelse ($announcements as $announcement)
+                    <div class="card @if($announcement->trashed()) card-danger @else card-success @endif card-outline">
+                        <a class="d-block" data-toggle="collapse" href="#announcement-{{ $announcement->id }}">
                             <div class="card-header d-flex p-0">
                                 {{-- <div class="row"> --}}
                                     {{-- <div class="col-md-6"> --}}
                                     <h4 class="card-title p-3 text-dark">
-                                        {{ $achievement->title }}
-                                        @if($achievement->trashed())
+                                        {{ $announcement->title }}
+                                        @if($announcement->trashed())
                                         <strong class="text-danger">
                                             [DELETED]
                                         </strong>
@@ -42,41 +42,41 @@
                                     </h4>
                                     {{-- </div> --}}
                                     <ul class="nav nav-pills ml-auto p-2">
-                                        @if ($achievement->trashed())
-                                            @can('achievements.restore')
+                                        @if ($announcement->trashed())
+                                            @can('announcements.restore')
                                             <li class="nav-item">
-                                                <a class="nav-link text-success" href="javascript:void(0)" onclick="restoreFromTable(this)" data-href="{{ route('achievements.restore', $achievement->id) }}"><i class="fad fa-download"></i> Restore</a>
+                                                <a class="nav-link text-success" href="javascript:void(0)" onclick="restoreFromTable(this)" data-href="{{ route('announcements.restore', $announcement->id) }}"><i class="fad fa-download"></i> Restore</a>
                                             </li>
                                             @endcan
                                         @else
-                                            @can('achievements.destroy')
+                                            @can('announcements.destroy')
                                             <li class="nav-item">
-                                                <a class="nav-link text-danger" href="javascript:void(0)" onclick="deleteFromTable(this)" data-href="{{ route('achievements.destroy', $achievement->id) }}"><i class="fad fa-trash-alt"></i> Delete</a>
+                                                <a class="nav-link text-danger" href="javascript:void(0)" onclick="deleteFromTable(this)" data-href="{{ route('announcements.destroy', $announcement->id) }}"><i class="fad fa-trash-alt"></i> Delete</a>
                                             </li>
                                             @endcan
                                         @endif
-                                        @can('achievements.edit')
+                                        @can('announcements.edit')
                                         <li class="nav-item">
-                                            <a class="nav-link text-primary" href="{{ route('achievements.edit', $achievement->id) }}"><i class="fad fa-edit"></i> Edit</a>
+                                            <a class="nav-link text-primary" href="{{ route('announcements.edit', $announcement->id) }}"><i class="fad fa-edit"></i> Edit</a>
                                         </li>
                                         @endcan
                                     </ul>
                                 {{-- </div> --}}
                             </div>
                         </a>
-                        <div id="achievement-{{ $achievement->id }}" class="collapse @if($loop->first) show @endif" data-parent="#accordion">
+                        <div id="announcement-{{ $announcement->id }}" class="collapse @if($loop->first) show @endif" data-parent="#accordion">
                             <div class="card-body">
-                                {!! $achievement->content !!}
+                                {!! $announcement->content !!}
                                 <br>
                                 <label>Date Published:</label>
-                                {{ date('F d, Y h:i A', strtotime($achievement->created_at)) }}
+                                {{ date('F d, Y h:i A', strtotime($announcement->created_at)) }}
                             </div>
                         </div>
                     </div>
                 @empty
-                {{-- <div class="alert alert-danger text-center">
+                <div class="alert alert-danger text-center">
                     *** EMPTY ***
-                </div> --}}
+                </div>
                 @endforelse
             </div>
             {{-- <div class="col">
@@ -95,23 +95,23 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($achievements as $achievement)
-                        <tr @unlessrole('System Administrator') @can('achievements.show') data-toggle="modal-ajax" data-target="#showAchievement" data-href="{{ route('achievements.show', $achievement->id) }}"  @endcan @else class="{{ $achievement->trashed() ? 'table-danger' : '' }}" @endunlessrole>
+                        @foreach ($announcements as $announcement)
+                        <tr @unlessrole('System Administrator') @can('announcements.show') data-toggle="modal-ajax" data-target="#showAnnouncement" data-href="{{ route('announcements.show', $announcement->id) }}"  @endcan @else class="{{ $announcement->trashed() ? 'table-danger' : '' }}" @endunlessrole>
                             @role('System Administrator')
-                            <td>{{ $achievement->id }}</td>
+                            <td>{{ $announcement->id }}</td>
                             @endrole
-                            <td>{{ $achievement->title }}</td>
-                            <td>{{ $achievement->description }}</td>
+                            <td>{{ $announcement->title }}</td>
+                            <td>{{ $announcement->description }}</td>
                             <td>
-                                {{ date('F d, Y h:i A', strtotime($achievement->created_at)) }}
+                                {{ date('F d, Y h:i A', strtotime($announcement->created_at)) }}
                             </td>
                             @role('System Administrator')
                                 <td class="text-center">
-                                    <a href="javascript:void(0)" data-toggle="modal-ajax" data-target="#showAchievement" data-href="{{ route('achievements.show',$achievement->id) }}"><i class="fad fa-file fa-lg"></i></a>
-                                    @if ($achievement->trashed())
-                                        <a class="text-success" href="javascript:void(0)" onclick="restoreFromTable(this)" data-href="{{ route('achievements.restore', $achievement->id) }}"><i class="fad fa-download fa-lg"></i></a>
+                                    <a href="javascript:void(0)" data-toggle="modal-ajax" data-target="#showAnnouncement" data-href="{{ route('announcements.show',$announcement->id) }}"><i class="fad fa-file fa-lg"></i></a>
+                                    @if ($announcement->trashed())
+                                        <a class="text-success" href="javascript:void(0)" onclick="restoreFromTable(this)" data-href="{{ route('announcements.restore', $announcement->id) }}"><i class="fad fa-download fa-lg"></i></a>
                                     @else
-                                        <a class="text-danger" href="javascript:void(0)" onclick="deleteFromTable(this)" data-href="{{ route('achievements.destroy', $achievement->id) }}"><i class="fad fa-trash-alt fa-lg"></i></a>
+                                        <a class="text-danger" href="javascript:void(0)" onclick="deleteFromTable(this)" data-href="{{ route('announcements.destroy', $announcement->id) }}"><i class="fad fa-trash-alt fa-lg"></i></a>
                                     @endif
                                 </td>
                             @endrole
@@ -119,7 +119,7 @@
                         @endforeach
                     </tbody>
                 </table>
-            </div> --}} 
+            </div> --}}
         </div>
     </div>
 </section>
