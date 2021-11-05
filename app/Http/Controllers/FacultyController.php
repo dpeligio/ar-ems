@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\Configuration\RolePermission\Role;
 use App\Models\User;
 use App\Models\UserFaculty;
-use App\Models\Section;
+use App\Models\Configuration\Section;
 use App\Models\FacultySection;
 
 class FacultyController extends Controller
@@ -85,6 +85,7 @@ class FacultyController extends Controller
 			'middle_name' => 'required',
 			'last_name' => 'required',
             'gender' => 'required',
+            'birth_date' => 'required',
             'contact_number' => ['unique:faculties,contact_number']
         ]);
 
@@ -94,6 +95,7 @@ class FacultyController extends Controller
 			'middle_name' => $request->get('middle_name'),
 			'last_name' => $request->get('last_name'),
 			'gender' => $request->get('gender'),
+			'birth_date' => $request->get('birth_date'),
 			'contact_number' => $request->get('contact_number'),
 			'address' => $request->get('address'),
         ]);
@@ -203,6 +205,7 @@ class FacultyController extends Controller
 			'middle_name' => 'required',
 			'last_name' => 'required',
             'gender' => 'required',
+            'birth_date' => 'required',
             'contact_number' => ['unique:faculties,contact_number,'.$faculty->id]
         ]);
 
@@ -212,12 +215,9 @@ class FacultyController extends Controller
 			'middle_name' => $request->get('middle_name'),
 			'last_name' => $request->get('last_name'),
 			'gender' => $request->get('gender'),
+			'birth_date' => $request->get('birth_date'),
 			'contact_number' => $request->get('contact_number'),
 			'address' => $request->get('address'),
-        ]);
-
-        $faculty->section->update([
-            'section_id' => $request->get('section')
         ]);
 
         return back()->with('alert-success', 'Saved');

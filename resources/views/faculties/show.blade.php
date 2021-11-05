@@ -2,7 +2,7 @@
 	<div class="modal-dialog modal-lg modal-dialog-scrollable">
 		<div class="modal-content">
 			<div class="modal-header">
-	          <h4 class="modal-title">{{ $faculty_show->getFacultyName($faculty_show->id) }}</h4>
+	          <h4 class="modal-title">{{ $faculty_show->getFacultyName() }}</h4>
 	          <button type="button" class="close" data-dismiss="modal-ajax" aria-hidden="true">&times;</button>
 	    	</div>
 			<div class="modal-body">
@@ -22,6 +22,9 @@
                         <br>
                         <label>Gender: </label>
                         {{ $faculty_show->gender }}
+                        <br>
+                        <label>Birth Date: </label>
+                        {{ date('F d, Y', strtotime($faculty_show->birth_date)) }}
                         <br>
                         <label>Contact #: </label>
                         {{ $faculty_show->contact_number }}
@@ -98,7 +101,7 @@
 						@endcan
 					@endif
 					@can('faculties.edit')
-					   <a class="btn btn-default text-primary" href="javascript:void(0)" data-toggle="modal-ajax" data-href="{{ route('faculties.edit', $faculty_show->id) }}" data-target="#editStudent"><i class="fad fa-edit"></i> Edit</a>
+					   <a class="btn btn-default text-primary" href="javascript:void(0)" data-toggle="modal-ajax" data-href="{{ route('faculties.edit', $faculty_show->id) }}" data-target="#editFaculty"><i class="fad fa-edit"></i> Edit</a>
 					@endcan
 				</div>
 				<div class="col text-right">

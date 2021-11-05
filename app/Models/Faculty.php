@@ -26,7 +26,7 @@ class Faculty extends Model
         return $this->hasOne('App\Models\UserFaculty', 'faculty_id');
     }
 
-    public static function getFacultyName()
+    public function getFacultyName()
 	{
 		$faculty = self::find($this->id);
 		$name = "N/A";

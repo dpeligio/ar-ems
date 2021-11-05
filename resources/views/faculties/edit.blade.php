@@ -27,7 +27,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Last Name:</label><br>
-                                <input class="form-control" type="text" name="last_name" value="{{ $faculty_edit->first_name }}" required>
+                                <input class="form-control" type="text" name="last_name" value="{{ $faculty_edit->last_name }}" required>
                             </div>
                             <div class="form-group">
                                 <label>Gender:</label><br>
@@ -45,6 +45,10 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Birth Date:</label><br>
+                                <input class="form-control" type="date" name="birth_date" value="{{ $faculty_edit->birth_date }}" required>
                             </div>
                             <div class="form-group">
                                 <label>Contact #:</label><br>

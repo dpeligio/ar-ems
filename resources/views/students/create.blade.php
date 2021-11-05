@@ -59,7 +59,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Birth Date:</label><br>
-                                <input class="form-control" type="date" name="birth_date" value="{{ old('birth_date') }}">
+                                <input class="form-control" type="date" name="birth_date" value="{{ old('birth_date') }}" required>
                             </div>
                             <div class="form-group">
                                 <label>Contact #:</label><br>

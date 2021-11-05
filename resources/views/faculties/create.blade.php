@@ -46,6 +46,10 @@
                                 </div>
                             </div>
                             <div class="form-group">
+                                <label>Birth Date:</label><br>
+                                <input class="form-control" type="date" name="birth_date" required>
+                            </div>
+                            <div class="form-group">
                                 <label>Contact #:</label><br>
                                 <input class="form-control" type="text" name="contact_number">
                             </div>

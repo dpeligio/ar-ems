@@ -2,7 +2,7 @@
     @csrf
     @method('PUT')
     <div class="modal fade" id="editStudent" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-md" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Edit Student</h5>
@@ -39,7 +39,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Last Name:</label><br>
-                                <input class="form-control" type="text" name="last_name" value="{{ $student_edit->first_name }}" required>
+                                <input class="form-control" type="text" name="last_name" value="{{ $student_edit->last_name }}" required>
                             </div>
                             <div class="form-group">
                                 <label>Gender:</label><br>
@@ -57,6 +57,10 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Birth Date:</label><br>
+                                <input class="form-control" type="date" name="birth_date" value="{{ $student_edit->birth_date }}" required>
                             </div>
                             <div class="form-group">
                                 <label>Contact #:</label><br>
@@ -77,7 +81,7 @@
         </div>
     </div>
 </form>
-<script>
+{{-- <script>
     $(function(){
         addUserCredentials()
 
@@ -95,4 +99,4 @@
             }
         }
     })
-</script>
+</script> --}}
