@@ -1,12 +1,78 @@
+<!-- jQuery -->
+<script src="{{ asset('AdminLTE-3.1.0/plugins/jquery/jquery.min.js') }}"></script>
+
+<script type="application/javascript">
+    $(function(){
+        @php
+            $url = explode('/', url()->current());
+            $base_url = $url[0].'//'.$url[2].'/'.($url[3] ?? '').(isset($url[4]) ? '/'.$url[4] : '');
+        @endphp
+        var url = '{{ $base_url }}';
+        var controller = '{{ $url[3] }}';
+        // for sidebar menu but not for treeview submenu
+        $('ul.nav-sidebar li a').filter(function() {
+            if(url == $(this).attr('href')){
+                $(this).addClass('active')
+            }
+        })
+        $('ul.nav-treeview li a').filter(function() {
+            if(url == $(this).attr('href')){
+                $(this).parent().parent().parent().addClass('menu-open')
+                $(this).parent().parent().parent().find('a[href="#"]').addClass('active')
+            }
+        })
+    })
+</script>
 <!-- Bootstrap -->
 <script src="{{ asset('AdminLTE-3.1.0/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+<!-- overlayScrollbars -->
+<script src="{{ asset('AdminLTE-3.1.0/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
+<!-- AdminLTE App -->
+<script src="{{ asset('AdminLTE-3.1.0/dist/js/adminlte.js') }}"></script>
+<!-- PAGE PLUGINS -->
+<!-- jQuery Mapael -->
+<script src="{{ asset('AdminLTE-3.1.0/plugins/jquery-mousewheel/jquery.mousewheel.js') }}"></script>
+<script src="{{ asset('AdminLTE-3.1.0/plugins/raphael/raphael.min.js') }}"></script>
+<script src="{{ asset('AdminLTE-3.1.0/plugins/jquery-mapael/jquery.mapael.min.js') }}"></script>
+<script src="{{ asset('AdminLTE-3.1.0/plugins/jquery-mapael/maps/usa_states.min.js') }}"></script>
+
+<script src="{{ asset('AdminLTE-3.1.0/plugins/moment/moment-with-locales.min.js') }}"></script>
+<script src="{{ asset('AdminLTE-3.1.0/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"></script>
+<script src="{{ asset('AdminLTE-3.1.0/plugins/sweetalert2/sweetalert2.all.min.js') }}"></script>
+<script src="{{ asset('AdminLTE-3.1.0/plugins/select2/js/select2.full.min.js') }}"></script>
+<script src="{{ asset('AdminLTE-3.1.0/plugins/datatables/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('AdminLTE-3.1.0/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+<script src="{{ asset('AdminLTE-3.1.0/plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
+<script src="{{ asset('AdminLTE-3.1.0/plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
+<script src="{{ asset('AdminLTE-3.1.0/plugins/datatables-buttons/js/dataTables.buttons.min.js') }}"></script>
+<script src="{{ asset('AdminLTE-3.1.0/plugins/datatables-buttons/js/buttons.bootstrap4.min.js') }}"></script>
+<script src="{{ asset('AdminLTE-3.1.0/plugins/jszip/jszip.min.js') }}"></script>
+<script src="{{ asset('AdminLTE-3.1.0/plugins/pdfmake/pdfmake.min.js') }}"></script>
+<script src="{{ asset('AdminLTE-3.1.0/plugins/pdfmake/vfs_fonts.js') }}"></script>
+<script src="{{ asset('AdminLTE-3.1.0/plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
+<script src="{{ asset('AdminLTE-3.1.0/plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
+<script src="{{ asset('AdminLTE-3.1.0/plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
 
 <script>
+    // loader
+    $(window).on('beforeunload', function(){
+       $('#loader').fadeIn();
+    });
+    $(window).on('load', function(){
+       $('#loader').fadeOut();
+    });
+
+    // for select2 inside the modal
+    $.fn.modal.Constructor.prototype._enforceFocus = function() {};
+
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
+
+    // table row link
+    $('tr[data-toggle="modal-ajax"]').css('cursor', 'pointer')
     $(function() {
         $(".tr-link").click(function() {
             window.location = $(this).data("href");
@@ -14,14 +80,6 @@
         $(document).on('click', 'tr[data-toggle="tr-link"]', function(){
             window.location = $(this).data("href");
         })
-    });
-
-    $(window).on('beforeunload', function(){
-       $('#loader').fadeIn();
-    });
-
-    $(window).on('load', function(){
-       $('#loader').fadeOut();
     });
 
     function deleteFromTable(button){
@@ -47,7 +105,6 @@
     })
 
     function ajax_error(xhr, ajaxOptions, thrownError){
-        // console.log(xhr.responseJSON)
         if(xhr.responseJSON.exception == "Spatie\\Permission\\Exceptions\\UnauthorizedException"){
             ajax_permission_denied();
         }else{
@@ -56,25 +113,13 @@
             $('#xhr').html(xhr.responseJSON.message);
             $('#modalAjaxError').modal('show');
         }
-        /*Swal.fire({
-            // position: 'top-end',
-            type: 'error',
-            title: ajaxOptions+":\n"+thrownError+".\n"+xhr.responseJSON.message,
-            // showConfirmButton: false,
-            // timer: 3000,
-            // toast: true
-        })*/
     }
 
     function ajax_permission_denied(){
         Swal.fire({
-            // position: 'top-end',
             type: 'error',
             title: "Access Denied",
             text: "User does not have the right permissions.",
-            // showConfirmButton: false,
-            // timer: 3000,
-            // toast: true
         })
     }
 
@@ -82,8 +127,6 @@
         var noHashURL = window.location.href.replace(/#.*$/, '');
         window.history.replaceState('', document.title, noHashURL)
     }
-
-    $('tr[data-toggle="modal-ajax"]').css('cursor', 'pointer')
 
     // Modal Ajax
     $(document).on('click', '[data-toggle="modal-ajax"]', function(){
@@ -110,9 +153,9 @@
                 $('.select2').select2({
                     theme: "bootstrap4",
                     placeholder: "Select",
-                    allowClear: true
+                    // allowClear: true
                 });
-                $('.datetimepicker').datetimepicker();
+                // $('.datetimepicker').datetimepicker();
                 $('#oldInput').find('input').each(function(){
                     var name = $(this).attr('name').replace('old_', '');
                     if(name != '_token'){
@@ -126,6 +169,7 @@
                 })
                 $(target).modal('show')
                 $('#loader').hide();
+                
             },
             error: function(xhr, ajaxOptions, thrownError){
                 ajax_error(xhr, ajaxOptions, thrownError)
@@ -183,50 +227,9 @@
     });
 </script>
 
-<!-- overlayScrollbars -->
-<script src="{{ asset('AdminLTE-3.1.0/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
-<!-- AdminLTE App -->
-<script src="{{ asset('AdminLTE-3.1.0/dist/js/adminlte.js') }}"></script>
-<!-- PAGE PLUGINS -->
-<!-- jQuery Mapael -->
-<script src="{{ asset('AdminLTE-3.1.0/plugins/jquery-mousewheel/jquery.mousewheel.js') }}"></script>
-<script src="{{ asset('AdminLTE-3.1.0/plugins/raphael/raphael.min.js') }}"></script>
-<script src="{{ asset('AdminLTE-3.1.0/plugins/jquery-mapael/jquery.mapael.min.js') }}"></script>
-<script src="{{ asset('AdminLTE-3.1.0/plugins/jquery-mapael/maps/usa_states.min.js') }}"></script>
-
-<script src="{{ asset('AdminLTE-3.1.0/plugins/moment/moment-with-locales.min.js') }}"></script>
-<script src="{{ asset('AdminLTE-3.1.0/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"></script>
-<script src="{{ asset('AdminLTE-3.1.0/plugins/sweetalert2/sweetalert2.all.min.js') }}"></script>
-<script src="{{ asset('AdminLTE-3.1.0/plugins/select2/js/select2.full.min.js') }}"></script>
-<script src="{{ asset('AdminLTE-3.1.0/plugins/datatables/jquery.dataTables.min.js') }}"></script>
-<script src="{{ asset('AdminLTE-3.1.0/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
-<script src="{{ asset('AdminLTE-3.1.0/plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
-<script src="{{ asset('AdminLTE-3.1.0/plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
-<script src="{{ asset('AdminLTE-3.1.0/plugins/datatables-buttons/js/dataTables.buttons.min.js') }}"></script>
-<script src="{{ asset('AdminLTE-3.1.0/plugins/datatables-buttons/js/buttons.bootstrap4.min.js') }}"></script>
-<script src="{{ asset('AdminLTE-3.1.0/plugins/jszip/jszip.min.js') }}"></script>
-<script src="{{ asset('AdminLTE-3.1.0/plugins/pdfmake/pdfmake.min.js') }}"></script>
-<script src="{{ asset('AdminLTE-3.1.0/plugins/pdfmake/vfs_fonts.js') }}"></script>
-<script src="{{ asset('AdminLTE-3.1.0/plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
-<script src="{{ asset('AdminLTE-3.1.0/plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
-<script src="{{ asset('AdminLTE-3.1.0/plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
-{{-- @auth
-<!-- ChartJS -->
-<script src="{{ asset('AdminLTE-3.1.0/plugins/chart.js/Chart.min.js') }}"></script>
-
-<!-- AdminLTE for demo purposes -->
-<script src="{{ asset('AdminLTE-3.1.0/dist/js/demo.js') }}"></script>
-<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-<script src="{{ asset('AdminLTE-3.1.0/dist/js/pages/dashboard2.js') }}"></script>
-@endauth --}}
 {{-- Disable Submit Button --}}
 <script type="application/javascript">
     $(function() {
-        /*$(document).on('click', '.btn-submit-out', function() {
-            $(this).prop('disabled', true).append(' <i class="fa fa-spinner fa-pulse"></i>');
-            $($(this).data('submit')).submit();
-        });*/
-
         $(document).on('submit', 'form', function(){
             $(this).find('button[type=submit]').prop('disabled', true).append(' <i class="fa fa-spinner fa-spin fa-pulse"></i>')
         })
@@ -235,7 +238,6 @@
 
 {{-- Initialize tempusdominus-bootstrap --}}
 <script type="application/javascript">
-    // Set default options
     $.extend(true, $.fn.datetimepicker.Constructor.Default, {
         icons: {
             /* time: 'far fa-clock',
@@ -287,13 +289,6 @@
             placeholder: "Select",
             allowClear: true
 		});
-
-		$('.select2-no-search').select2({
-            theme: "bootstrap4",
-            placeholder: "Select",
-            allowClear: true,
-			minimumResultsForSearch: Infinity
-        });
 
         $('.select2-tag').select2({
             theme: "bootstrap4",

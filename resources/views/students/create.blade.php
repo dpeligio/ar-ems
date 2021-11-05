@@ -18,10 +18,10 @@
                             </div>
                             <div class="form-group">
                                 <label>Grade/Section:</label><br>
-                                <select class="form-control select2" name="asd">
+                                <select class="form-control select2" name="section">
                                     <option></option>
                                     @foreach ($sections as $section)
-                                        <option value="{{ $section->id }}" @if(old('section') == $section->id) selected @endif>
+                                        <option value="{{ $section->id }}" @if(old('section') == $section->id) selected @endif >
                                             {{ $section->grade_level }}
                                             {{ $section->name }}
                                         </option>
