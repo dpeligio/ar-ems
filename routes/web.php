@@ -93,6 +93,7 @@ Route::group(array('middleware'=>['auth']), function() {
 	Route::resource('elections', 'ElectionController');
 	// restore
 	Route::get('elections/get_election_data/{election}', 'ElectionController@getElectionData')->name('votes.get_election_data');
+	Route::get('elections/end/{election}', 'ElectionController@endElection')->name('elections.end');
 	Route::get('election_result', 'ElectionController@results')->name('elections.results');
 	// Route::post('elections/update_status/{election}', 'ElectionController@updateStatus')->name('elections.update_status');
 	Route::post('elections_restore/{election}', [

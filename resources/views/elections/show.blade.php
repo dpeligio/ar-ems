@@ -9,6 +9,10 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
+                            <label>Status: </label><br>
+                            {{ $election_show->status }}
+                        </div>
+                        <div class="form-group">
                             <label>Title: </label><br>
                             {{ $election_show->title }}
                         </div>
@@ -68,7 +72,10 @@
 					@endif
 					@can('elections.edit')
 					   <a class="btn btn-default text-primary" href="javascript:void(0)" data-toggle="modal-ajax" data-href="{{ route('elections.edit', $election_show->id) }}" data-target="#editElection"><i class="fad fa-edit"></i> Edit</a>
-					@endcan
+                    @endcan
+                    @can('elections.end')
+					   <a class="btn btn-default text-success" href="{{ route('elections.end', $election_show->id) }}" ><i class="fad fa-stamp"></i> End</a>
+                    @endcan
 				</div>
 				<div class="col text-right">
 					<button class="btn btn-default" type="button" data-dismiss="modal-ajax"> Close</button>

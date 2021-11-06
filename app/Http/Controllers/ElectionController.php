@@ -298,4 +298,13 @@ class ElectionController extends Controller
 
         return view('elections.results', $data);
     }
+
+    public function endElection(Election $election)
+    {
+        $election->update([
+            'status' => 'ended'
+        ]);
+
+        return redirect()->route('elections.index')->with('alert-success', 'Election Ended');
+    }
 }

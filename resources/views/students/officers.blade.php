@@ -16,15 +16,15 @@
                             {{ $candidate->student->getStudentName() }}
                             </br>
                         @empty
+                        <p>N/A</p>
                         @endforelse
                     </p>
                 @else
                     <p>
                         {{ $position->electedOfficer()->student->getStudentName() }}
                     </p>
-                    @endif
+                @endif
                 </div>
-            
             @endif
         @endforeach
     </div>

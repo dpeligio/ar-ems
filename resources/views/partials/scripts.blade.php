@@ -1,30 +1,5 @@
 <!-- jQuery -->
 <script src="{{ asset('AdminLTE-3.1.0/plugins/jquery/jquery.min.js') }}"></script>
-
-<script type="application/javascript">
-    $(function(){
-        @php
-            $url = explode('/', url()->current());
-            $base_url = $url[0].'//'.$url[2].'/'.($url[3] ?? '').(isset($url[4]) ? '/'.$url[4] : '');
-        @endphp
-        var url = '{{ $base_url }}';
-        var controller = '{{ $url[3] }}';
-        // for sidebar menu but not for treeview submenu
-        $('ul.nav-sidebar li a').filter(function() {
-            if(url == $(this).attr('href')){
-                $(this).addClass('active')
-            }
-        })
-        $('ul.nav-treeview li a').filter(function() {
-            if(url == $(this).attr('href')){
-                $(this).parent().parent().parent().addClass('menu-open')
-                $(this).parent().parent().parent().find('a[href="#"]').addClass('active')
-            }
-        })
-    })
-</script>
-<!-- Bootstrap -->
-<script src="{{ asset('AdminLTE-3.1.0/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 <!-- overlayScrollbars -->
 <script src="{{ asset('AdminLTE-3.1.0/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
 <!-- AdminLTE App -->
@@ -52,6 +27,31 @@
 <script src="{{ asset('AdminLTE-3.1.0/plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
 <script src="{{ asset('AdminLTE-3.1.0/plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
 <script src="{{ asset('AdminLTE-3.1.0/plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
+
+<script type="application/javascript">
+    $(function(){
+        @php
+            $url = explode('/', url()->current());
+            $base_url = $url[0].'//'.$url[2].'/'.($url[3] ?? '').(isset($url[4]) ? '/'.$url[4] : '');
+        @endphp
+        var url = '{{ $base_url }}';
+        var controller = '{{ $url[3] }}';
+        // for sidebar menu but not for treeview submenu
+        $('ul.nav-sidebar li a').filter(function() {
+            if(url == $(this).attr('href')){
+                $(this).addClass('active')
+            }
+        })
+        $('ul.nav-treeview li a').filter(function() {
+            if(url == $(this).attr('href')){
+                $(this).parent().parent().parent().addClass('menu-open')
+                $(this).parent().parent().parent().find('a[href="#"]').addClass('active')
+            }
+        })
+    })
+</script>
+<!-- Bootstrap -->
+<script src="{{ asset('AdminLTE-3.1.0/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
 <script>
     // loader
@@ -155,7 +155,7 @@
                     placeholder: "Select",
                     // allowClear: true
                 });
-                // $('.datetimepicker').datetimepicker();
+                $('.datetimepicker').datetimepicker();
                 $('#oldInput').find('input').each(function(){
                     var name = $(this).attr('name').replace('old_', '');
                     if(name != '_token'){
