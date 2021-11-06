@@ -87,7 +87,7 @@ class User extends Authenticatable
         if(is_null($this->image)){
             $avatar = "images/user/default/male.jpg";
         }else{
-            $avatar = "images/user/".$this->image;
+            $avatar = "images/user/uploads/".$this->image;
         }
         return $avatar;
     }

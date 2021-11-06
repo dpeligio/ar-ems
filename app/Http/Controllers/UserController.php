@@ -260,7 +260,7 @@ class UserController extends Controller
             $avatar= $request->file('image');
             $thumbnailImage = Image::make($avatar);
 
-            $storagePath = 'images/user';
+            $storagePath = 'images/user/uploads';
             $fileName = $user->id . '_' . date('m-d-Y H.i.s') . '.' . $avatar->getClientOriginalExtension();
             $myimage = $thumbnailImage->fit(500);
             // Storage::disk('upload')->putFileAs('images/rooms', $request->file('image'), $fileName);
