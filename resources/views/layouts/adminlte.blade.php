@@ -86,12 +86,12 @@
                             Account
                         </a>
                         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                            @can('account.index')
+                            {{-- @can('account.index') --}}
                             <a href="{{ route('account.index', Auth::user()->id) }}" class="dropdown-item">
                                 <i class="fas fa-user-cog mr-2"></i> Settings
                             </a>
                             <div class="dropdown-divider"></div>
-                            @endcan
+                            {{-- @endcan --}}
                             <a href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();" class="dropdown-item">
                                 <i class="fas fa-sign-out mr-2"></i> Logout
                             </a>
