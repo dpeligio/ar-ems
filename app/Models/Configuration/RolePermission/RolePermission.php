@@ -4,12 +4,10 @@ namespace App\Models\Configuration\RolePermission;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Wildside\Userstamps\Userstamps;
 
 class RolePermission extends Model
 {
 	use SoftDeletes;
-	use Userstamps;
 
 	protected $table = 'role_has_permissions';
 

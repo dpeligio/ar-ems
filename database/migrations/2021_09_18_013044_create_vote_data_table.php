@@ -30,9 +30,6 @@ class CreateVoteDataTable extends Migration
                 ->on('candidates')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
-            $table->unsignedBigInteger('created_by')->nullable();
-			$table->unsignedBigInteger('updated_by')->nullable();
-			$table->unsignedBigInteger('deleted_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

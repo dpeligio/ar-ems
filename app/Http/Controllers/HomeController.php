@@ -45,12 +45,16 @@ class HomeController extends Controller
                 $ongoingElectionChart[$position]->height(250);
                 $labels = [];
                 $votes = [];
+                $ongoingElectionChart[$position]->labels(['votes']);
                 foreach ($candidates as $candidate) {
-                    $labels[] = $candidate->student->getStudentName($candidate->student_id);
-                    $votes[] = $candidate->votes->count();
+                    $labels[] = $candidate->student->fullname('');
+                    $votes[$candidate->id] = $candidate->votes->count();
                 }
-                $ongoingElectionChart[$position]->labels($labels);
-                $ongoingElectionChart[$position]->dataset('votes', 'bar', $votes)->backgroundColor('#007bff')->color('#007bff');
+                foreach ($candidates as $candidate) {
+                    $legend = $candidate->student->fullname('').($candidate->partylist->name ? ' ('.$candidate->partylist->name.')' : '');
+                    $ongoingElectionChart[$position]->dataset($legend, 'bar', [$votes[$candidate->id]])->backgroundColor(($candidate->partylist->color ?? '#28a745'))->color(($candidate->partylist->color ?? '#28a745'));
+                }
+                
                 $ongoingElectionChart[$position]->options([
                     'scales' => [
                         'yAxes' => [[

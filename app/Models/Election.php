@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Wildside\Userstamps\Userstamps;
 use Carbon\Carbon;
 use App\Models\Candidate;
 use Auth;
@@ -12,7 +11,6 @@ use Auth;
 class Election extends Model
 {
     use SoftDeletes;
-    use Userstamps;
     
     protected $table = 'elections';
 
@@ -55,6 +53,43 @@ class Election extends Model
         }else{
             return False;
         }
+    }
+
+    public function getStatus()
+    {
+        $start_date = Carbon::parse($this->start_date);
+        $end_date = Carbon::parse($this->end_date);
+        $status = 'incoming';
+
+        if($start_date->lt($now) && $end_date->gt($now)){
+            $status = 'ongoing';
+        }
+        elseif($end_date->lt($now)){
+            $status = 'ended';
+        }
+        return $status;
+    }
+
+    public function getStatusBadge()
+    {
+        $status = $this->getStatus();
+        $badge = "";
+        switch ($status) {
+            case 'incoming':
+                $badge = '<span class="badge badge-warning">Incoming</span>';
+                break;
+            case 'ongoing':
+                $badge = '<span class="badge badge-success">Ongoing</span>';
+                break;
+            case 'ended':
+                $badge = '<span class="badge badge-primary">Ended</span>';
+                break;
+            
+            default:
+                # code...
+                break;
+        }
+        return $badge;
     }
 
     /* public function status() {

@@ -7,7 +7,9 @@ use Illuminate\Http\Request;
 use App\Models\Configuration\Position;
 use App\Models\Student;
 use App\Models\Candidate;
+use App\Models\Partylist;
 use App\Charts\OngoingElectionChart;
+use App\Charts\ElectionResultPieChart;
 use Carbon\Carbon;
 use Auth;
 
@@ -50,17 +52,21 @@ class ElectionController extends Controller
     {
         $data = ([
 			'positions' => Position::get(),
-			'students' => Student::get()
+			'students' => Student::get(),
+			'partylists' => Partylist::get(),
 		]);
 		/* if(!Auth::user()->hasrole('System Administrator')){
 			$data = ([
 				'faculty' => $faculty,
 			]);
-		} */
-
-		return response()->json([
-			'modal_content' => view('elections.create', $data)->render()
-		]);
+        } */
+        if(request()->ajax()){
+            return response()->json([
+                'modal_content' => view('elections.create_ajax', $data)->render()
+            ]);
+        }else{
+            return view('elections.create', $data);
+        }
     }
 
     /**
@@ -74,7 +80,8 @@ class ElectionController extends Controller
         $request->validate([
 			'title' => ['required', 'unique:elections,title'],
             'start_date' => 'required',
-            'description' => 'required',
+            'end_date' => 'required',
+            // 'description' => 'required',
         ]);
         
         $now = Carbon::now();
@@ -98,16 +105,19 @@ class ElectionController extends Controller
         ]);
 
         foreach($request->get('candidates') as $position => $candidates){
-            foreach($candidates as $candidate){
-                Candidate::create([
-                    'student_id' => $candidate,
-                    'election_id' => $election->id,
-                    'position_id' => $position,
-                ]);
+            foreach($candidates as $index => $candidate){
+                if(!is_null($candidate)){
+                    Candidate::create([
+                        'partylist_id' => $request->get('candidate-partylists')[$position][$index],
+                        'student_id' => $candidate,
+                        'election_id' => $election->id,
+                        'position_id' => $position,
+                    ]);
+                }
             }
         }
 
-        return back()->with('alert-success', 'Saved');
+        return redirect()->route('elections.index')->with('alert-success', 'Saved');
     }
 
     /**
@@ -118,12 +128,7 @@ class ElectionController extends Controller
      */
     public function show(Election $election)
     {
-        $data = [
-            'election_show' => $election
-        ];
-        return response()->json([
-			'modal_content' => view('elections.show', $data)->render()
-		]);
+        return view('elections.show', compact('election'));
     }
 
     /**
@@ -137,12 +142,11 @@ class ElectionController extends Controller
         $data = ([
 			'positions' => Position::get(),
 			'students' => Student::get(),
+			'partylists' => Partylist::get(),
 			'election' => $election
 		]);
 
-		return response()->json([
-			'modal_content' => view('elections.edit', $data)->render()
-		]);
+		return view('elections.edit', $data);
     }
 
     /**
@@ -158,7 +162,6 @@ class ElectionController extends Controller
 			'title' => ['required', 'unique:elections,title,'.$election->id],
             'start_date' => 'required',
             'end_date' => 'required',
-            'description' => 'required',
         ]);
         $now = Carbon::now();
         $start_date = Carbon::parse($request->get('start_date'));
@@ -183,7 +186,7 @@ class ElectionController extends Controller
         $selectedCandidatesIDs = [];
 
         foreach($request->get('candidates') as $position => $candidates){
-            foreach($candidates as $candidate){
+            foreach($candidates as $index => $candidate){
                 $query = Candidate::where([
                     ['student_id', $candidate],
                     ['election_id', $election->id],
@@ -191,6 +194,7 @@ class ElectionController extends Controller
                 ])->doesntExist();
                 if($query){
                     Candidate::create([
+                        'partylist_id' => $request->get('candidate-partylists')[$position][$index],
                         'student_id' => $candidate,
                         'election_id' => $election->id,
                         'position_id' => $position,
@@ -203,7 +207,7 @@ class ElectionController extends Controller
             ['election_id', $election->id],
         ])->whereNotIn('student_id', $selectedCandidatesIDs)->delete();
 
-        return redirect()->route('elections.index')->with('alert-success', 'Saved');
+        return redirect()->route('elections.show', $election->id)->with('alert-success', 'Saved');
     }
 
     /**
@@ -215,8 +219,10 @@ class ElectionController extends Controller
     public function destroy(Election $election)
 	{
 		if (request()->get('permanent')) {
+            Candidate::whereIn('id', $election->candidates->pluck('id'))->forceDelete();
 			$election->forceDelete();
 		}else{
+            Candidate::whereIn('id', $election->candidates->pluck('id'))->delete();
 			$election->delete();
 		}
 		return redirect()->route('elections.index')
@@ -226,7 +232,8 @@ class ElectionController extends Controller
 	public function restore($election)
 	{
 		$election = Election::withTrashed()->find($election);
-		$election->restore();
+        $election->restore();
+        Candidate::where('election_id', $election->id)->withTrashed()->restore();
 		return redirect()->route('elections.index')
 						->with('alert-success','Restored');
 	}
@@ -262,28 +269,64 @@ class ElectionController extends Controller
             if(isset($election->id)){
                 foreach ($election->candidates->groupBy('position_id') as $position => $candidates) {
                     $electionChart[$election->id][$position] = new OngoingElectionChart;
-                    $electionChart[$election->id][$position]->height(250);
-                    $labels = [];
+                    $electionChart[$election->id][$position]->height(300);
+
+                    $electionPieChart[$election->id][$position] = new ElectionResultPieChart;
+                    $electionPieChart[$election->id][$position]->height(300);
+                    $pieChartLabels = [];
                     $votes = [];
+                    $pieChartData = [];
+                    $electionChart[$election->id][$position]->labels(['votes']);
                     foreach ($candidates as $candidate) {
-                        $labels[] = $candidate->student->getStudentName($candidate->student_id);
-                        $votes[] = $candidate->votes->count();
+                        $pieChartLabels[] = $candidate->student->fullname('').($candidate->partylist ? ' ('.$candidate->partylist->name.')' : '');
+                        $labelColors[] = ($candidate->partylist->color ?? '#6c757d');
+                        $pieChartData[] = $candidate->votes->count();
+                        $votes[$candidate->id] = $candidate->votes->count();
                     }
-                    $electionChart[$election->id][$position]->labels($labels);
-                    $electionChart[$election->id][$position]->dataset('votes', 'bar', $votes)->backgroundColor('#007bff')->color('#007bff');
+                    foreach ($candidates as $candidate) {
+                        $legend = $candidate->student->fullname('').($candidate->partylist ? ' ('.$candidate->partylist->name.')' : '');
+                        $electionChart[$election->id][$position]->dataset($legend, 'bar', [$votes[$candidate->id]])->backgroundColor(($candidate->partylist->color ?? '#6c757d'))->color(($candidate->partylist->color ?? '#6c757d'));
+                    }
                     $electionChart[$election->id][$position]->options([
                         'scales' => [
-                            'yAxes' => [[
+                            /* 'yAxes' => [[
                                 'ticks' => [
                                     'stepSize' => 1,
                                     // 'max' => 5,
                                     // 'max' => 0
                                 ]
-                            ]],
+                            ]], */
                             'xAxes' => [[
                                 'gridLines' => [
                                     'display' => true
                                 ]
+                            ]]
+                        ]
+                    ]);
+
+                    // Pie Chart
+                    
+                    /* foreach ($candidates as $candidate) {
+                        $legend = $candidate->student->fullname('').($candidate->partylist ? ' ('.$candidate->partylist->name.')' : '');
+                        $electionPieChart[$election->id][$position]->dataset($legend, 'pie', [$votes[$candidate->id]])->backgroundColor(($candidate->partylist->color ?? '#6c757d'))->color(($candidate->partylist->color ?? '#6c757d'));
+                    } */
+                    $electionPieChart[$election->id][$position]->labels($pieChartLabels);
+                    $electionPieChart[$election->id][$position]->dataset('Votes', 'pie', $pieChartData)->backgroundColor($labelColors)->color('#fff');
+                    
+                    // $electionChart[$election->id][$position]->dataset('votes', 'bar', $votes)->backgroundColor('#007bff')->color('#007bff');
+                    $electionPieChart[$election->id][$position]->options([
+                        'scales' => [
+                            'yAxes' => [[
+                                'display' => false,
+                                /* 'gridLines' => [
+                                    'display' => false
+                                ] */
+                            ]],
+                            'xAxes' => [[
+                                'display' => false,
+                                /* 'gridLines' => [
+                                    'display' => false
+                                ] */
                             ]]
                         ]
                     ]);
@@ -293,6 +336,7 @@ class ElectionController extends Controller
 
         $data = [
             'electionChart' => $electionChart,
+            'electionPieChart' => $electionPieChart,
             'elections' => $elections,
         ];
 

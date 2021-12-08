@@ -5,15 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class UserAnnouncement extends Model
+class Partylist extends Model
 {
     use SoftDeletes;
-
-    protected $table = 'user_announcements';
+    
+    protected $table = 'partylists';
 
     protected $fillable = [
-        'is_seen',
-        'user_id',
-        'announcement_id',
+        'name',
+        'color',
     ];
 }

@@ -11,7 +11,7 @@
         <br>
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <h2>Vission</h2>
+                <h2>Vision</h2>
             </div>
         </div>
         <div class="row justify-content-center">

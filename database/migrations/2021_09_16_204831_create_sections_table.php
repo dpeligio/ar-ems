@@ -18,9 +18,6 @@ class CreateSectionsTable extends Migration
             $table->enum('grade_level', [7, 8, 9, 10, 11, 12]);
             // $table->enum('stage', ['secondary', 'tertiary']);
             $table->string('name');
-            $table->unsignedBigInteger('created_by')->nullable();
-			$table->unsignedBigInteger('updated_by')->nullable();
-			$table->unsignedBigInteger('deleted_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

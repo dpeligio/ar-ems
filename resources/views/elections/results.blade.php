@@ -50,7 +50,7 @@
                                 <div class="position-relative mb-4">
                                     <div class="row">
                                         @foreach ($election->candidates->groupBy('position_id') as $position => $candidates)
-                                            <div class="col-md-3">
+                                            <div class="col-md-12">
                                                 <div class="card">
                                                     <div class="card-header border-0">
                                                         <div class="d-flex justify-content-between">
@@ -59,8 +59,17 @@
                                                         </div>
                                                     </div>
                                                     <div class="card-body">
-                                                        <div class="position-relative mb-4">
-                                                            {!! $electionChart[$election->id][$position]->container() !!}
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <div class="position-relative mb-4">
+                                                                    {!! $electionChart[$election->id][$position]->container() !!}
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <div class="position-relative mb-4">
+                                                                    {!! $electionPieChart[$election->id][$position]->container() !!}
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -99,6 +108,7 @@
     @isset($election->id)
         @foreach ($election->candidates->groupBy('position_id') as $position => $candidates)
         {!! $electionChart[$election->id][$position]->script() !!}
+        {!! $electionPieChart[$election->id][$position]->script() !!}
         @endforeach
     @endisset
 @endforeach

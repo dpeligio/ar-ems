@@ -7,13 +7,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Wildside\Userstamps\Userstamps;
 use App\Models\Announcement;
 
 class User extends Authenticatable
 {
     use SoftDeletes;
-	use Userstamps;
     use Notifiable;
 	use HasRoles;
 

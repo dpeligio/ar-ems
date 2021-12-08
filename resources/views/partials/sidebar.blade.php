@@ -1,7 +1,7 @@
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar elevation-4 sidebar-light-success">
     <!-- Brand Logo -->
-    <a href="@auth{{ route('dashboard') }}@else{{ route('pages.vission_mission') }}@endauth" class="brand-link text-sm">
+    <a href="@auth{{ route('dashboard') }}@else{{ route('pages.vision_mission') }}@endauth" class="brand-link text-sm">
         <img src="{{ asset('images/logo.png') }}" alt="BSF" class="brand-image img-circle elevation-3" style="opacity: .8">
         <span class="brand-text font-weight-light">BSF SSG Management</span>
     </a>
@@ -34,10 +34,10 @@
             <ul class="nav nav-pills nav-sidebar flex-column nav-flat" data-widget="treeview" role="menu" data-accordion="false">
                 @guest
                     <li class="nav-item">
-                        <a href="{{ route('pages.vission_mission') }}" class="nav-link">
+                        <a href="{{ route('pages.vision_mission') }}" class="nav-link">
                             <i class="nav-icon fas fa-dot-circle"></i>
                             <p>
-                                Vission/Mission
+                                Vision/Mission
                             </p>
                         </a>
                     </li>

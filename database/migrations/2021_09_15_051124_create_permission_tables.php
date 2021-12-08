@@ -30,9 +30,6 @@ class CreatePermissionTables extends Migration
             $table->string('group');       // For MySQL 8.0 use string('name', 125);
             $table->string('name');       // For MySQL 8.0 use string('name', 125);
             $table->string('guard_name'); // For MySQL 8.0 use string('guard_name', 125);
-            $table->unsignedBigInteger('created_by')->nullable();
-			$table->unsignedBigInteger('updated_by')->nullable();
-			$table->unsignedBigInteger('deleted_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
@@ -47,9 +44,6 @@ class CreatePermissionTables extends Migration
             }
             $table->string('name');       // For MySQL 8.0 use string('name', 125);
             $table->string('guard_name'); // For MySQL 8.0 use string('guard_name', 125);
-            $table->unsignedBigInteger('created_by')->nullable();
-			$table->unsignedBigInteger('updated_by')->nullable();
-			$table->unsignedBigInteger('deleted_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
             if ($teams || config('permission.testing')) {

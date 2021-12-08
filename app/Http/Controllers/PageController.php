@@ -8,7 +8,7 @@ use App\Models\Achievement;
 
 class PageController extends Controller
 {
-    public function vissionMission()
+    public function visionMission()
     {
         return view('welcome');
     }

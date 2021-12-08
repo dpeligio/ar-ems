@@ -3,7 +3,6 @@
 namespace App\Models\Configuration;
 
 use Illuminate\Database\Eloquent\Model;
-use Wildside\Userstamps\Userstamps;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Election;
 use App\Models\Student;
@@ -12,7 +11,6 @@ use App\Models\Candidate;
 class Position extends Model
 {
 	use SoftDeletes;
-    use Userstamps;
     
     protected $table = 'positions';
 

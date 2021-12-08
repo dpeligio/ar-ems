@@ -24,9 +24,6 @@ class CreateFacultiesTable extends Migration
             $table->date('birth_date');
             $table->string('contact_number')->unique();
             $table->text('address')->nullable();
-            $table->unsignedBigInteger('created_by')->nullable();
-			$table->unsignedBigInteger('updated_by')->nullable();
-			$table->unsignedBigInteger('deleted_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

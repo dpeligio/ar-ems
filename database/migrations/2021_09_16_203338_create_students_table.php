@@ -24,9 +24,6 @@ class CreateStudentsTable extends Migration
             $table->string('gender');
             $table->string('contact_number')->unique()->nullable();
             $table->text('address')->nullable();
-            $table->unsignedBigInteger('created_by')->nullable();
-			$table->unsignedBigInteger('updated_by')->nullable();
-			$table->unsignedBigInteger('deleted_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

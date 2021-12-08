@@ -12,13 +12,13 @@
 */
 
 Route::get('/', function () {
-	return redirect()->route('pages.vission_mission');
+	return redirect()->route('pages.vision_mission');
 });
 
 Auth::routes();
 
 Route::get('/dashboard', 'HomeController@index')->name('dashboard');
-Route::get('/pages/vission_mission', 'PageController@vissionMission')->name('pages.vission_mission');
+Route::get('/pages/vision_mission', 'PageController@visionMission')->name('pages.vision_mission');
 Route::get('/pages/achievements', 'PageController@achievements')->name('pages.achievements');
 Route::get('/pages/officers', 'PageController@officers')->name('pages.officers');
 

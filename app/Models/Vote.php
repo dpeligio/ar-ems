@@ -4,13 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Wildside\Userstamps\Userstamps;
 use App\Models\VoteData;
 
 class Vote extends Model
 {
 	use SoftDeletes;
-    use Userstamps;
     
     protected $table = 'votes';
 

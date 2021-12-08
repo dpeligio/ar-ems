@@ -23,9 +23,6 @@ class CreateTasksTable extends Migration
             $table->boolean('is_done')->default(false)->nullable();
             $table->string('task');
             $table->text('description')->nullable();
-            $table->unsignedBigInteger('created_by')->nullable();
-			$table->unsignedBigInteger('updated_by')->nullable();
-			$table->unsignedBigInteger('deleted_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

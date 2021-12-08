@@ -4,22 +4,26 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Wildside\Userstamps\Userstamps;
 use App\Models\Election;
 use App\Models\Configuration\Position;
 
 class Candidate extends Model
 {
     use SoftDeletes;
-    use Userstamps;
     
     protected $table = 'candidates';
 
     protected $fillable = [
+        'partylist_id',
         'student_id',
         'election_id',
         'position_id'
     ];
+
+    public function partylist()
+    {
+        return $this->belongsTo('App\Models\Partylist', 'partylist_id');
+    }
 
     public function student(){
         return $this->belongsTo('App\Models\Student', 'student_id');

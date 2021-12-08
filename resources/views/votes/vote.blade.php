@@ -30,7 +30,7 @@
                 @foreach ($candidates as $candidate)
                 <tr>
                     <td>
-                        {{ $candidate->student->getStudentName($candidate->student_id) }}
+                        {{ $candidate->student->fullname('') }} ({{ $candidate->partylist->name }})
                     </td>
                     <td class="text-center">
                     @if($position->candidate_to_elect > 1)

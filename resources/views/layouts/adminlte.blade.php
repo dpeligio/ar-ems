@@ -10,7 +10,8 @@
 
         <title>{{ config('app.name', 'Laravel') }}</title>
 
-        
+        <!-- jQuery -->
+        <script src="{{ asset('AdminLTE-3.1.0/plugins/jquery/jquery.min.js') }}"></script>
 
         <!-- Google Font: Source Sans Pro -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -123,7 +124,7 @@
         </div>
 
         {{-- Old input --}}
-        <div class="d-none" id="oldInput">
+        {{-- <div class="d-none" id="oldInput">
             @forelse (old() as $input => $value)
                 @if (is_array($value))
                     @if($input == 'candidates')
@@ -144,7 +145,7 @@
                 @endif
             @empty
             @endforelse
-        </div>
+        </div> --}}
         @if (count($errors) > 0)
             <div style="position: absolute; top: 0; right: 0; z-index: 1111">
                 <div class="toast" data-autohide="false" role="alert" aria-live="assertive" aria-atomic="true">
@@ -158,7 +159,9 @@
                         {{-- There were some problems with your input. --}}
                         <ul>
                         @foreach ($errors->all() as $error)
+                            @if(!is_array($error))
                             <li>{{ $error }}</li>
+                            @endif
                         @endforeach
                         </ul>
                     </div>

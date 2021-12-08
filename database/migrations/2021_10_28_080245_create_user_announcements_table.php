@@ -18,9 +18,6 @@ class CreateUserAnnouncementsTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('announcement_id');
             $table->boolean('is_seen')->default(1)->nullable();
-            $table->unsignedBigInteger('created_by')->nullable();
-			$table->unsignedBigInteger('updated_by')->nullable();
-			$table->unsignedBigInteger('deleted_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
 

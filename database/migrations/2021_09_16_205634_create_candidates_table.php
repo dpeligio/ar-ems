@@ -15,26 +15,29 @@ class CreateCandidatesTable extends Migration
     {
         Schema::create('candidates', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedBigInteger('partylist_id')->nullable();
             $table->unsignedBigInteger('student_id');
+            $table->unsignedBigInteger('election_id');
+            $table->unsignedBigInteger('position_id');
+            $table->timestamps();
+            $table->softDeletes();
+
+            $table->foreign('partylist_id')->references('id')
+				->on('partylists')
+				->onDelete('cascade')
+				->onUpdate('cascade');
             $table->foreign('student_id')->references('id')
 				->on('students')
 				->onDelete('cascade')
 				->onUpdate('cascade');
-            $table->unsignedBigInteger('election_id');
             $table->foreign('election_id')->references('id')
 				->on('elections')
 				->onDelete('cascade')
                 ->onUpdate('cascade');
-            $table->unsignedBigInteger('position_id');
             $table->foreign('position_id')->references('id')
                 ->on('positions')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
-            $table->unsignedBigInteger('created_by')->nullable();
-			$table->unsignedBigInteger('updated_by')->nullable();
-			$table->unsignedBigInteger('deleted_by')->nullable();
-            $table->timestamps();
-            $table->softDeletes();
         });
     }
 
