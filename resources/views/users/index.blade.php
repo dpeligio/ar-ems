@@ -16,9 +16,7 @@
                 <table id="datatable" class="table table-bordered table-hover table-sm">
                     <thead>
                         <tr>
-                            @role('System Administrator')
                             <th>ID</th>
-                            @endrole
                             <th>Role</th>
                             <th>Name</th>
                             <th>Username</th>
@@ -29,13 +27,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($users as $user)
+                        @foreach ($users as $index => $user)
                         <tr @unlessrole('System Administrator') @can('users.show') data-toggle="modal-ajax" data-target="#showUser" data-href="{{ route('users.show', $user->id) }}"  @endcan @else class="{{ $user->trashed() ? 'table-danger' : '' }}" @endunlessrole>
-                        @if(Auth::user()->hasrole('System Administrator'))
-                        <td>
-                            {{ $user->id }}
-                        </td>
-                        @endif
+                        <td>{{ $index+1 }}</td>
                         <td>{{ $user->role->role->name }}</td>
                         <td>
                             @isset($user->student->student)

@@ -21,9 +21,7 @@
                 <table id="datatable" class="table table-sm table-bordered table-striped">
                     <thead>
                         <tr>
-                            @role('System Administrator')
                             <th>ID</th>
-                            @endrole
                             <th>Status</th>
                             <th>Title</th>
                             <th>Description</th>
@@ -34,11 +32,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($elections as $election)
+                        @foreach ($elections as $index => $election)
                         <tr @unlessrole('System Administrator') @can('elections.show') data-toggle="tr-link" data-target="#showElection" data-href="{{ route('elections.show', $election->id) }}"  @endcan @else class="{{ $election->trashed() ? 'table-danger' : '' }}" @endunlessrole>
-                            @role('System Administrator')
-                            <td>{{ $election->id }}</td>
-                            @endrole
+                            <td>{{ $index+1 }}</td>
                             <td>
                                 {{ $election->status }}
                             </td>

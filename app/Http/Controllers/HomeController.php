@@ -11,6 +11,7 @@ use App\Models\Votes;
 use App\Models\User;
 use App\Models\Configuration\Position;
 use App\Charts\OngoingElectionChart;
+use App\Charts\ElectionResultPieChart;
 
 class HomeController extends Controller
 {
@@ -37,33 +38,43 @@ class HomeController extends Controller
         $tasks = Task::get()->count();
         $users = User::get()->count();
 
-        $ongoingElectionChart = [];
+        $electionChart = [];
+        $electionPieChart = [];
         $ongoingElection = Election::where('status', 'ongoing')->orderBy('start_date','DESC')->first();
         if(isset($ongoingElection->id)){
             foreach ($ongoingElection->candidates->groupBy('position_id') as $position => $candidates) {
-                $ongoingElectionChart[$position] = new OngoingElectionChart;
-                $ongoingElectionChart[$position]->height(250);
-                $labels = [];
+                $electionChart[$position] = new OngoingElectionChart;
+                $electionChart[$position]->height(300);
+
+                $electionPieChart[$position] = new ElectionResultPieChart;
+                $electionPieChart[$position]->height(300);
+                $pieChartLabels = [];
+                $pieChartLabelsByPercentage = [];
                 $votes = [];
-                $ongoingElectionChart[$position]->labels(['votes']);
+                $pieChartData = [];
+                $labelColors = [];
+                $totalVotes = 0;
+                $electionChart[$position]->labels(['votes']);
                 foreach ($candidates as $candidate) {
-                    $labels[] = $candidate->student->fullname('');
+                    $pieChartLabels[] = $candidate->student->fullname('').(isset($candidate->partylist->name) ? ' ('.$candidate->partylist->name.')' : '');
+                    $labelColors[] =  $candidate->partylist->color ?? '#6c757d';
+                    $pieChartData[] = $candidate->votes->count();
                     $votes[$candidate->id] = $candidate->votes->count();
+                    $totalVotes += $candidate->votes->count();
                 }
                 foreach ($candidates as $candidate) {
-                    $legend = $candidate->student->fullname('').($candidate->partylist->name ? ' ('.$candidate->partylist->name.')' : '');
-                    $ongoingElectionChart[$position]->dataset($legend, 'bar', [$votes[$candidate->id]])->backgroundColor(($candidate->partylist->color ?? '#28a745'))->color(($candidate->partylist->color ?? '#28a745'));
+                    $legend = $candidate->student->fullname('').(isset($candidate->partylist->name) ? ' ('.$candidate->partylist->name.')' : '');
+                    $electionChart[$position]->dataset($legend, 'bar', [$votes[$candidate->id]])->backgroundColor(($candidate->partylist->color ?? '#6c757d'))->color(($candidate->partylist->color ?? '#6c757d'));
                 }
-                
-                $ongoingElectionChart[$position]->options([
+                $electionChart[$position]->options([
                     'scales' => [
-                        'yAxes' => [[
+                        /* 'yAxes' => [[
                             'ticks' => [
                                 'stepSize' => 1,
                                 // 'max' => 5,
                                 // 'max' => 0
                             ]
-                        ]],
+                        ]], */
                         'xAxes' => [[
                             'gridLines' => [
                                 'display' => true
@@ -71,12 +82,41 @@ class HomeController extends Controller
                         ]]
                     ]
                 ]);
+
+                // Pie Chart
+                
+                foreach ($candidates as $candidate) {
+                    $percentage = round(($candidate->votes->count() / $totalVotes) * 100, PHP_ROUND_HALF_UP );
+                    $pieChartLabelsByPercentage[] = $candidate->student->fullname('').(isset($candidate->partylist->name) ? ' ('.$candidate->partylist->name.') ' : ' ') . $percentage.'%';
+                }
+                $electionPieChart[$position]->labels($pieChartLabelsByPercentage);
+                // $electionPieChart[$position]->labels($pieChartLabels);
+                $electionPieChart[$position]->dataset('Votes', 'pie', $pieChartData)->backgroundColor($labelColors)->color('#fff');
+                
+                // $electionChart[$position]->dataset('votes', 'bar', $votes)->backgroundColor('#007bff')->color('#007bff');
+                $electionPieChart[$position]->options([
+                    'scales' => [
+                        'yAxes' => [[
+                            'display' => false,
+                            /* 'gridLines' => [
+                                'display' => false
+                            ] */
+                        ]],
+                        'xAxes' => [[
+                            'display' => false,
+                            /* 'gridLines' => [
+                                'display' => false
+                            ] */
+                        ]]
+                    ]
+                ]);
             }
         }
 
         $data = [
-            'ongoingElectionChart' => $ongoingElectionChart,
-            'ongoingElection' => $ongoingElection,
+            'electionPieChart' => $electionPieChart,
+            'electionChart' => $electionChart,
+            'election' => $ongoingElection,
             'taskDone' => $taskDone,
             'tasks' => $tasks,
             'faculties' => $faculties,

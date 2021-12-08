@@ -145,6 +145,16 @@
                     </li>
                     @endif
                     @endcan
+                    @can('partylists.index')
+                    <li class="nav-item">
+                        <a href="{{ route('partylists.index') }}" class="nav-link">
+                            <i class="nav-icon fas fa-users-class"></i>
+                            <p>
+                                Partylists
+                            </p>
+                        </a>
+                    </li>
+                    @endcan
                     @can('students.index')
                     <li class="nav-item">
                         <a href="{{ route('students.index') }}" class="nav-link">

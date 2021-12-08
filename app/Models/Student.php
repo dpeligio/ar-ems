@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Configuration\Position;
 use App\Models\Election;
 use App\Models\Candidate;
+use App\Models\Vote;
+use App\Models\VoteData;
 
 class Student extends Model
 {
@@ -73,10 +75,12 @@ class Student extends Model
                         $name .= $this->first_name;
                     break;
                 case 'm':
-                    if($i == 1){
-                        $name .= ' '.$this->middle_name[0].'. ';
-                    }else{
-                        $name .= ' '.$this->middle_name[0].'. ';
+                    if(!is_null($this->middle_name) && $this->middle_name!=''){
+                        if($i == 1){
+                            $name .= ' '.$this->middle_name[0].'. ';
+                        }else{
+                            $name .= ' '.$this->middle_name[0].'. ';
+                        }
                     }
                     break;
                 case 'M':
@@ -96,7 +100,7 @@ class Student extends Model
                 
                 default:
                 $name = $this->first_name.' '.
-                    (is_null($this->middle_name) ? '' : $this->middle_name[0].'. ').
+                    ((is_null($this->middle_name) && $this->middle_name!='') ? '' : $this->middle_name[0].'. ').
                     $this->last_name;
                     break;
             }
@@ -190,5 +194,23 @@ class Student extends Model
             }
         }
         return Candidate::whereIn('id', $candidatesID)->get();
+    }
+
+    public function getVotedCandidate($electionID, $position){
+        $vote = Vote::where([
+            ['election_id', $electionID],
+            ['voter_id', $this->user->user_id],
+        ])->first();
+        if($position->candidate_to_elect < 2){
+            return VoteData::where([
+                ['vote_id', $vote->id],
+                ['position_id', $position->id],
+            ])->first();
+        }else{
+            return VoteData::where([
+                ['vote_id', $vote->id],
+                ['position_id', $position->id],
+            ])->get();
+        }
     }
 }

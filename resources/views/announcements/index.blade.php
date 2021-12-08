@@ -10,16 +10,12 @@
             <div class="col-sm-6">
                 <h1 class="m-0">Announcements</h1>
             </div>
-            <!-- /.col -->
             <div class="col-sm-6 text-right">
                 @can('announcements.create')
-                    {{-- <button class="btn btn-default" type="button" data-toggle="modal-ajax" data-href="{{ route('announcements.create') }}" data-target="#createAnnouncement"><i class="fa fa-plus"></i> Add</button> --}}
                     <a class="btn btn-default" href="{{ route('announcements.create') }}"><i class="fa fa-plus"></i> Add</a>
                 @endcan
             </div>
-            <!-- /.col -->
         </div>
-        <!-- /.row -->
     </div>
 </div>
 <section class="content">
@@ -35,9 +31,9 @@
                                     <h4 class="card-title p-3 text-dark">
                                         {{ $announcement->title }}
                                         @if($announcement->trashed())
-                                        <strong class="text-danger">
+                                        <span class="alert alert-danger">
                                             [DELETED]
-                                        </strong>
+                                        </span>
                                         @endif
                                     </h4>
                                     {{-- </div> --}}
@@ -74,7 +70,7 @@
                         </div>
                     </div>
                 @empty
-                <div class="alert alert-danger text-center">
+                <div class="alert alert-warning text-center">
                     *** EMPTY ***
                 </div>
                 @endforelse

@@ -25,6 +25,7 @@
 <script src="{{ asset('AdminLTE-3.1.0/plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
 <script src="{{ asset('AdminLTE-3.1.0/plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
 <script src="{{ asset('AdminLTE-3.1.0/plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
+<script src="{{ asset('AdminLTE-3.1.0/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js')}}"></script>
 
 <script type="application/javascript">
     $(function(){
@@ -380,5 +381,14 @@
 <script type="application/javascript">
     $(document).ready( function () {
         $('#datatable').DataTable();
+        $('.datatable').DataTable();
     });
+</script>
+
+{{-- Initialize Colorpicker --}}
+<script>
+    $('.partylist-color').colorpicker()
+    $('.partylist-color').on('colorpickerChange', function(event) {
+        $('.partylist-color .fa-square').css('color', event.color.toString());
+    })
 </script>

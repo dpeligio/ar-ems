@@ -72,31 +72,41 @@
         </div>
         <div class="row">
             <div class="col-lg-12">
-                @isset($ongoingElection->id)
+                @isset($election->id)
                 <div class="card">
                     <div class="card-header text-center">
                         <h4 class="card-title">Ongoing Election</h4>
                     </div>
                     <div class="card-body">
                         <div class="position-relative mb-4">
-                            <div class="row">
-                                @foreach ($ongoingElection->candidates->groupBy('position_id') as $position => $candidates)
-                                    <div class="col-md-3">
+                            @foreach ($election->candidates->groupBy('position_id') as $position => $candidates)
+                                <div class="row">
+                                    <div class="col-md-12">
                                         <div class="card">
                                             <div class="card-header border-0">
                                                 <div class="d-flex justify-content-between">
                                                     <h3 class="card-title">{{ App\Models\Configuration\Position::find($position)->name }}</h3>
+                                                    {{-- <a href="javascript:void(0);">View Report</a> --}}
                                                 </div>
                                             </div>
                                             <div class="card-body">
-                                                <div class="position-relative mb-4">
-                                                    {!! $ongoingElectionChart[$position]->container() !!}
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="position-relative mb-4">
+                                                            {!! $electionChart[$position]->container() !!}
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="position-relative mb-4">
+                                                            {!! $electionPieChart[$position]->container() !!}
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                @endforeach
-                            </div>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -108,10 +118,11 @@
 @endsection
 
 @section('script')
-<script src="{{ asset('AdminLTE-3.1.0/plugins/chart.js/Chart.min.js') }}"></script>
-@isset($ongoingElection->id)
-    @foreach ($ongoingElection->candidates->groupBy('position_id') as $position => $candidates)
-    {!! $ongoingElectionChart[$position]->script() !!}
-    @endforeach
-@endisset
+    <script src="{{ asset('AdminLTE-3.1.0/plugins/chart.js/Chart.min.js') }}"></script>
+    @isset($election->id)
+        @foreach ($election->candidates->groupBy('position_id') as $position => $candidates)
+            {!! $electionChart[$position]->script() !!}
+            {!! $electionPieChart[$position]->script() !!}
+        @endforeach
+    @endisset
 @endsection

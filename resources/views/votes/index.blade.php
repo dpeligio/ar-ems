@@ -20,9 +20,7 @@
                     <table id="datatable" class="table table-sm table-bordered table-hover">
                         <thead>
                             <tr>
-                                @role('System Administrator')
                                 <th>ID</th>
-                                @endrole
                                 <th>Election</th>
                                 <th>Vote Number</th>
                                 <th>Name</th>
@@ -32,11 +30,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($votes as $vote)
+                            @foreach ($votes as $index => $vote)
                             <tr @unlessrole('System Administrator') @can('votes.show') data-toggle="modal-ajax" data-target="#showVote" data-href="{{ route('votes.show', $vote->id) }}"  @endcan @else class="{{ $vote->trashed() ? 'table-danger' : '' }}" @endunlessrole>
-                                @role('System Administrator')
-                                <td>{{ $vote->id }}</td>
-                                @endrole
+                                <td>{{ $index+1 }}</td>
                                 <td>{{ $vote->election->title }}</td>
                                 <td>{{ $vote->vote_number }}</td>
                                 <td>

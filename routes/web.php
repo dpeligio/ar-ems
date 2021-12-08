@@ -90,11 +90,20 @@ Route::group(array('middleware'=>['auth']), function() {
 	/**
 	 * Elections
 	 */
+	Route::resource('partylists', 'PartylistController');
+	Route::post('partylists_restore/{partylist}', [
+		'as' => 'partylists.restore',
+		'uses' => 'PartylistController@restore'
+	]);
+	/**
+	 * Elections
+	 */
 	Route::resource('elections', 'ElectionController');
 	// restore
 	Route::get('elections/get_election_data/{election}', 'ElectionController@getElectionData')->name('votes.get_election_data');
 	Route::get('elections/end/{election}', 'ElectionController@endElection')->name('elections.end');
 	Route::get('election_result', 'ElectionController@results')->name('elections.results');
+	Route::get('election/export', 'ElectionController@export')->name('elections.export');
 	// Route::post('elections/update_status/{election}', 'ElectionController@updateStatus')->name('elections.update_status');
 	Route::post('elections_restore/{election}', [
 		'as' => 'elections.restore',

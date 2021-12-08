@@ -103,13 +103,13 @@
 @endsection
 
 @section('script')
-<script src="{{ asset('AdminLTE-3.1.0/plugins/chart.js/Chart.min.js') }}"></script>
-@foreach ($elections as $election)
-    @isset($election->id)
-        @foreach ($election->candidates->groupBy('position_id') as $position => $candidates)
-        {!! $electionChart[$election->id][$position]->script() !!}
-        {!! $electionPieChart[$election->id][$position]->script() !!}
-        @endforeach
-    @endisset
-@endforeach
+    <script src="{{ asset('AdminLTE-3.1.0/plugins/chart.js/Chart.min.js') }}"></script>
+    @foreach ($elections as $election)
+        @isset($election->id)
+            @foreach ($election->candidates->groupBy('position_id') as $position => $candidates)
+                {!! $electionChart[$election->id][$position]->script() !!}
+                {!! $electionPieChart[$election->id][$position]->script() !!}
+            @endforeach
+        @endisset
+    @endforeach
 @endsection

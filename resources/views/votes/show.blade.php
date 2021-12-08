@@ -39,6 +39,7 @@
                             <thead>
                                 <tr>
                                     <th>Candidate</th>
+                                    <th>Partylist</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -46,7 +47,10 @@
                                 @foreach ($candidates as $candidate)
                                 <tr class="{{ $candidate->trashed() ? 'table-danger' : ''}}">
                                     <td>
-                                        {{ $candidate->student->getStudentName($candidate->student_id) }}
+                                        {{ $candidate->student->fullname('') }}
+                                    </td>
+                                    <td>
+                                        {{ $candidate->partylist->name ?? "" }}
                                     </td>
                                     <td style="width: 10px">
                                         @if($vote->isVotedCandidate($candidate->id))

@@ -32,11 +32,14 @@ class StudentController extends Controller
     public function index()
     {
         $students = Student::select('*');
+        $gradeLevel = Section::select('*');
         if(Auth::user()->hasrole('System Administrator')){
 			$students->withTrashed();
+			$gradeLevel->withTrashed();
 		}
         $data = [
-            'students' => $students->get()
+            'students' => $students->get(),
+            'gradeLevels' => $gradeLevel->get()->groupBy('grade_level'),
         ];
         
 		return view('students.index', $data);
@@ -61,11 +64,6 @@ class StudentController extends Controller
 			'roles' => $roles->get(),
 			'sections' => Section::get()
 		]);
-		/* if(!Auth::user()->hasrole('System Administrator')){
-			$data = ([
-				'student' => $student,
-			]);
-		} */
 
 		return response()->json([
 			'modal_content' => view('students.create', $data)->render()
@@ -238,8 +236,10 @@ class StudentController extends Controller
     public function destroy(Student $student)
 	{
 		if (request()->get('permanent')) {
+			$student->section->forceDelete();
 			$student->forceDelete();
 		}else{
+			$student->section->delete();
 			$student->delete();
 		}
 		return redirect()->route('students.index')->with('alert-danger','Deleted');
@@ -249,6 +249,7 @@ class StudentController extends Controller
 	{
 		$student = Student::withTrashed()->find($student);
 		$student->restore();
+		$student->section->restore();
 		return redirect()->route('students.index')->with('alert-success','Restored');
     }
 }

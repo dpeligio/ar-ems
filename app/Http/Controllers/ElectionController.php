@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Election;
+use App\Models\Vote;
 use Illuminate\Http\Request;
 use App\Models\Configuration\Position;
+use App\Models\Configuration\Section;
 use App\Models\Student;
 use App\Models\Candidate;
 use App\Models\Partylist;
@@ -12,6 +14,8 @@ use App\Charts\OngoingElectionChart;
 use App\Charts\ElectionResultPieChart;
 use Carbon\Carbon;
 use Auth;
+use App\Exports\ElectionExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ElectionController extends Controller
 {
@@ -264,6 +268,7 @@ class ElectionController extends Controller
     public function results()
     {
         $electionChart = [[]];
+        $electionPieChart = [[]];
         $elections = Election::where('status', 'ended')->orderBy('end_date','DESC')->get();
         foreach($elections as $election){
             if(isset($election->id)){
@@ -274,14 +279,18 @@ class ElectionController extends Controller
                     $electionPieChart[$election->id][$position] = new ElectionResultPieChart;
                     $electionPieChart[$election->id][$position]->height(300);
                     $pieChartLabels = [];
+                    $pieChartLabelsByPercentage = [];
                     $votes = [];
                     $pieChartData = [];
+                    $labelColors = [];
+                    $totalVotes = 0;
                     $electionChart[$election->id][$position]->labels(['votes']);
                     foreach ($candidates as $candidate) {
                         $pieChartLabels[] = $candidate->student->fullname('').($candidate->partylist ? ' ('.$candidate->partylist->name.')' : '');
                         $labelColors[] = ($candidate->partylist->color ?? '#6c757d');
                         $pieChartData[] = $candidate->votes->count();
                         $votes[$candidate->id] = $candidate->votes->count();
+                        $totalVotes += $candidate->votes->count();
                     }
                     foreach ($candidates as $candidate) {
                         $legend = $candidate->student->fullname('').($candidate->partylist ? ' ('.$candidate->partylist->name.')' : '');
@@ -305,12 +314,12 @@ class ElectionController extends Controller
                     ]);
 
                     // Pie Chart
-                    
-                    /* foreach ($candidates as $candidate) {
-                        $legend = $candidate->student->fullname('').($candidate->partylist ? ' ('.$candidate->partylist->name.')' : '');
-                        $electionPieChart[$election->id][$position]->dataset($legend, 'pie', [$votes[$candidate->id]])->backgroundColor(($candidate->partylist->color ?? '#6c757d'))->color(($candidate->partylist->color ?? '#6c757d'));
-                    } */
-                    $electionPieChart[$election->id][$position]->labels($pieChartLabels);
+                    foreach ($candidates as $candidate) {
+                        $percentage = round(($candidate->votes->count() / $totalVotes) * 100, PHP_ROUND_HALF_UP );
+                        $pieChartLabelsByPercentage[] = $candidate->student->fullname('').(isset($candidate->partylist->name) ? ' ('.$candidate->partylist->name.') ' : ' ') . $percentage.'%';
+                    }
+                    $electionPieChart[$election->id][$position]->labels($pieChartLabelsByPercentage);
+                    // $electionPieChart[$election->id][$position]->labels($pieChartLabels);
                     $electionPieChart[$election->id][$position]->dataset('Votes', 'pie', $pieChartData)->backgroundColor($labelColors)->color('#fff');
                     
                     // $electionChart[$election->id][$position]->dataset('votes', 'bar', $votes)->backgroundColor('#007bff')->color('#007bff');
@@ -350,5 +359,21 @@ class ElectionController extends Controller
         ]);
 
         return redirect()->route('elections.index')->with('alert-success', 'Election Ended');
+    }
+
+    public function export() 
+    {
+        $election = Election::find(request()->get('election_id'));
+        $fileName = $election->title.' '.date('Y-m-d-H-i-s').'.xlsx';
+
+        return Excel::download(new ElectionExport(
+            $election->id), $fileName
+        );
+        /* $data = [
+            'election' => $election,
+            'votes' => Vote::where('election_id', $election->id)->get(),
+            'gradeLevels' => Section::get()->groupBy('grade_level'),
+        ];
+        return view('elections.export', $data); */
     }
 }

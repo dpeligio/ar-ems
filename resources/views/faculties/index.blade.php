@@ -7,18 +7,13 @@
             <div class="col-sm-6">
                 <h1 class="m-0">Faculties</h1>
             </div>
-            <!-- /.col -->
             <div class="col-sm-6 text-right">
                 @can('faculties.create')
                     <button class="btn btn-default" type="button" data-toggle="modal-ajax" data-href="{{ route('faculties.create') }}" data-target="#createFaculty"><i class="fa fa-plus"></i> Add</button>
                 @endcan
             </div>
-            <!-- /.col -->
         </div>
-        <!-- /.row -->
     </div>
-    <!-- /.container-fluid -->
-
     <section class="content">
         <div class="container-fluid">
             <div class="row">
@@ -26,9 +21,7 @@
                     <table id="datatable" class="table table-sm table-bordered table-hover">
                         <thead>
                             <tr>
-                                @role('System Administrator')
                                 <th>ID</th>
-                                @endrole
                                 <th>Account Status</th>
                                 <th>Faculty ID</th>
                                 <th>First Name</th>
@@ -40,11 +33,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($faculties as $faculty)
+                            @foreach ($faculties as $index => $faculty)
                             <tr @unlessrole('System Administrator') @can('faculties.show') data-toggle="modal-ajax" data-target="#showFaculty" data-href="{{ route('faculties.show', $faculty->id) }}"  @endcan @else class="{{ $faculty->trashed() ? 'table-danger' : '' }}" @endunlessrole>
-                                @role('System Administrator')
-                                <td>{{ $faculty->id }}</td>
-                                @endrole
+                                <td>{{ $index+1 }}</td>
                                 <td>
                                     @isset ($faculty->user)
                                     <span class="text-success">Active</span>

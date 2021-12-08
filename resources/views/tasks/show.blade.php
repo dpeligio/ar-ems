@@ -10,19 +10,19 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col">
-                        <div class="form-group">
+                        <div class="form-group mb-0">
                             <label>Date assigned:</label>
                             {{ date('F d, Y h:i A', strtotime($task->created_at)) }}
                         </div>
-                        <div class="form-group">
+                        <div class="form-group mb-0">
                             <label>Status:</label>
-                            {{ $task->is_done == 1 ? "Done" : "N/A" }}
+                            {{ $task->is_done == 1 ? "Done" : "Not yet done" }}
                         </div>
-                        <div class="form-group">
+                        <div class="form-group mb-0">
                             <label>Task:</label>
                             {{ $task->task }}
                         </div>
-                        <div class="form-group">
+                        <div class="form-group mb-0">
                             <label>Description:</label>
                             {{ $task->description }}
                         </div>

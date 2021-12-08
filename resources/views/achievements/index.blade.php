@@ -74,9 +74,9 @@
                         </div>
                     </div>
                 @empty
-                {{-- <div class="alert alert-danger text-center">
+                <div class="alert alert-warning text-center">
                     *** EMPTY ***
-                </div> --}}
+                </div>
                 @endforelse
             </div>
             {{-- <div class="col">
